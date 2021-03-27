@@ -14,6 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# Changed into Korean
+
 """Google Cloud Speech API sample application using the streaming API.
 
 NOTE: This module requires the dependencies `pyaudio` and `termcolor`.
