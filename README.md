@@ -1,33 +1,12 @@
 [![Work in Repl.it](https://classroom.github.com/assets/work-in-replit-14baed9a392b3a25080506f3b7b6d57f295ec2978f6f33ec97e36a161684cbe9.svg)](https://classroom.github.com/online_ide?assignment_repo_id=370297&assignment_repo_type=GroupAssignmentRepo)
-# Welcome to GitHub
 
-캡스톤 팀 생성을 축하합니다.
-
-## 팀소개 및 페이지를 꾸며주세요.
-
-- 프로젝트 소개
-  - 프로젝트 설치방법 및 데모, 사용방법, 프리뷰등을 readme.md에 작성.
-  - Api나 사용방법등 내용이 많을경우 wiki에 꾸미고 링크 추가.
-
-- 팀페이지 꾸미기
-  - 프로젝트 소개 및 팀원 소개
-  - index.md 예시보고 수정.
-
-- GitHub Pages 리파지토리 Settings > Options > GitHub Pages 
-  - Source를 marster branch
-  - Theme Chooser에서 태마선택
-  - 수정후 팀페이지 확인하여 점검.
-
-**팀페이지 주소** -> https://kookmin-sw.github.io/ '{{자신의 리파지토리 아이디}}'
-
-**예시)** 2020년 0조  https://kookmin-sw.github.io/capstone-2020-0/
+**팀페이지 주소** -> 2021년 30조 https://https://github.com/kookmin-sw/capstone-2021-30/
 
 
 ## 내용에 아래와 같은 내용들을 추가하세요.
 
 ### 1. 프로잭트 소개
-
-프로젝트
+영상의 음성 혹은 텍스트를 바탕으로 화면에 수화 봇을 띄워주는 프로그램
 
 ### 2. 소개 영상
 
@@ -35,9 +14,8 @@
 
 ### 3. 팀 소개
 
-팀을 소개하세요.
-
-팀원정보 및 담당이나 사진 및 SNS를 이용하여 소개하세요.
+팀장 : 박상욱
+팀원 : 김명호, 김유진, 박인혜, 조가성
 
 ### 4. 사용법
 
