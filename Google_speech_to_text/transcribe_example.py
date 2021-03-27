@@ -21,7 +21,7 @@ def transcribe_gcs(gcs_uri):
 
     return response
 
-gcs_uri = "gs://speech_to_text_ex1/[출근길 날씨] 맑고 큰 일교차…수도권·충청 황사 영향 KBS 20210317.flac"
+gcs_uri = "gs://speech_to_text_ex1/[출근길 날씨] 맑고 큰 일교차…수도권·충청 황사 영향 KBS 20210317.flac" # Write the file name
 response = transcribe_gcs(gcs_uri)
 
 with open('script_file.txt', "w") as script:
@@ -30,4 +30,4 @@ with open('script_file.txt', "w") as script:
 
 print("completed")
     
-    
+## confidence  0.92366016 /  0.8958913
