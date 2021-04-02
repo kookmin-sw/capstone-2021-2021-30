@@ -90,7 +90,7 @@ class MainWindow(QWidget):
             #self.dialog.setWindowTitle("Sign Language Video")
             #self.dialog.show()
 
-            motion.getHolisticData(self.selected_list[j])
+            motion.getHolisticData3(self.selected_list[j])
 
 def main():
     app = QApplication(sys.argv)

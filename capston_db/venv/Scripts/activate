@@ -37,7 +37,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="D:\Workspace\Capston\venv"
+VIRTUAL_ENV="D:\Workspace\GitHub\capstone-2021-2021-30\capston_db\venv"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"
