@@ -8,7 +8,7 @@ if defined _OLD_CODEPAGE (
     "%SystemRoot%\System32\chcp.com" 65001 > nul
 )
 
-set VIRTUAL_ENV=D:\Workspace\Capston\venv
+set VIRTUAL_ENV=D:\Workspace\GitHub\capstone-2021-2021-30\capston_db\venv
 
 if not defined PROMPT set PROMPT=$P$G
 
