@@ -2,7 +2,7 @@
 
 ## 0. 팀페이지 주소
 
-https://github.com/kookmin-sw/capstone-2021-30/
+https://kookmin-sw.github.io/capstone-2021-30/
 
 ## 1. 프로젝트 소개
 
