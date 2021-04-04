@@ -1173,11 +1173,12 @@ class MotionData:
                     image, results.pose_landmarks, mp_holistic.UPPER_BODY_POSE_CONNECTIONS)
 
                 # 랜드마크의 x,y 값 출력
-                current_time = time.time() - prev_time
+                time_rate = time.time() - prev_time
 
                 # 일정 시간(fps)마다 랜드마크 데이터가 하나라도 있을 때, 그 데이터를 가져와 저장
-                if (results.pose_landmarks or results.left_hand_landmarks or results.right_hand_landmarks) and (
-                        current_time > 1. / fps):
+                #if (results.pose_landmarks or results.left_hand_landmarks or results.right_hand_landmarks) and (
+                #        current_time > 1. / fps):
+                if time_rate > 1. / fps:
                     prev_time = time.time()
                     frame += 1
 
@@ -1193,37 +1194,59 @@ class MotionData:
                     # 포즈 데이터
                     if results.pose_landmarks:
                         # 어깨는 움직이지 않는다고 가정(상대 좌표 구하는 것이 불가능)
-                        left_shoulder_x[frame] =10.707
+                        left_shoulder_x[frame] = results.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_SHOULDER].x
                         left_elbow_x[frame] =results.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_ELBOW].x - \
                                              results.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_SHOULDER].x
                         left_wrist_x[frame] = results.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_ELBOW].x
-                        right_shoulder_x[frame] =-10.707
+                        right_shoulder_x[frame] = results.pose_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_SHOULDER].x
                         right_elbow_x[frame] =results.pose_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_ELBOW].x - \
                                               results.pose_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_SHOULDER].x
                         right_wrist_x[frame] = results.pose_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_ELBOW].x
 
-                        left_shoulder_y[frame] =-0
+                        left_shoulder_y[frame] =results.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_SHOULDER].y
                         left_elbow_y[frame] =results.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_SHOULDER].y - \
                                              results.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_ELBOW].y
                         left_wrist_y[frame] = results.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_ELBOW].y
-                        right_shoulder_y[frame] =0
+                        right_shoulder_y[frame] =results.pose_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_SHOULDER].y
                         right_elbow_y[frame] =results.pose_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_SHOULDER].y - \
                                               results.pose_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_ELBOW].y
                         right_wrist_y[frame] = results.pose_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_ELBOW].y
 
-                        left_shoulder_z[frame] = 0
+                        left_shoulder_z[frame] = results.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_SHOULDER].z
                         left_elbow_z[frame] = results.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_ELBOW].z - \
                                               results.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_SHOULDER].z
                         left_wrist_z[frame] = results.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_ELBOW].z
-                        right_shoulder_z[frame] =0
+                        right_shoulder_z[frame] =results.pose_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_SHOULDER].z
                         right_elbow_z[frame] = results.pose_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_ELBOW].z - \
                                                results.pose_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_SHOULDER].z
                         right_wrist_z[frame] = results.pose_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_ELBOW].z
 
-                        file_data['Character1_LeftArm'] = left_shoulder
-                        file_data['Character1_LeftForeArm'] = left_elbow
-                        file_data['Character1_RightArm'] = right_shoulder
-                        file_data['Character1_RightForeArm'] = right_elbow
+                    else:
+                        left_shoulder_x[frame] = 1234
+                        left_elbow_x[frame] = 1234
+                        #left_wrist_x[frame] = 1234
+                        right_shoulder_x[frame] = 1234
+                        right_elbow_x[frame] = 1234
+                        #right_wrist_x[frame] = 1234
+
+                        left_shoulder_y[frame] = 1234
+                        left_elbow_y[frame] = 1234
+                        #left_wrist_y[frame] = 1234
+                        right_shoulder_y[frame] = 1234
+                        right_elbow_y[frame] = 1234
+                        #right_wrist_y[frame] = 1234
+
+                        left_shoulder_z[frame] = 1234
+                        left_elbow_z[frame] = 1234
+                        #left_wrist_z[frame] = 1234
+                        right_shoulder_z[frame] = 1234
+                        right_elbow_z[frame] = 1234
+                        #right_wrist_z[frame] = 1234
+
+                    file_data['Character1_LeftArm'] = left_shoulder
+                    file_data['Character1_LeftForeArm'] = left_elbow
+                    file_data['Character1_RightArm'] = right_shoulder
+                    file_data['Character1_RightForeArm'] = right_elbow
 
                     # 왼손 데이터
                     if results.left_hand_landmarks:
@@ -1353,27 +1376,94 @@ class MotionData:
                         left_pinky_tip_z[frame] = results.left_hand_landmarks.landmark[mp_hands.HandLandmark.PINKY_TIP].z - \
                                                   results.left_hand_landmarks.landmark[mp_hands.HandLandmark.PINKY_DIP].z
 
-                        file_data['Character1_LeftHand'] =left_wrist
-                        file_data['Character1_LeftHandThumb1'] =left_thumb_cmc
-                        file_data['Character1_LeftHandThumb2'] =left_thumb_mcp
-                        file_data['Character1_LeftHandThumb3'] =left_thumb_ip
-                        file_data['Character1_LeftHandThumb4'] =left_thumb_tip
-                        file_data['Character1_LeftHandIndex1'] =left_index_finger_mcp
-                        file_data['Character1_LeftHandIndex2'] =left_index_finger_pip
-                        file_data['Character1_LeftHandIndex3'] =left_index_finger_dip
-                        file_data['Character1_LeftHandIndex4'] =left_index_finger_tip
-                        file_data['Character1_LeftHandMiddle1'] =left_middle_finger_mcp
-                        file_data['Character1_LeftHandMiddle2'] =left_middle_finger_pip
-                        file_data['Character1_LeftHandMiddle3'] =left_middle_finger_dip
-                        file_data['Character1_LeftHandMiddle4'] =left_middle_finger_tip
-                        file_data['Character1_LeftHandRing1'] =left_ring_finger_mcp
-                        file_data['Character1_LeftHandRing2'] =left_ring_finger_pip
-                        file_data['Character1_LeftHandRing3'] =left_ring_finger_dip
-                        file_data['Character1_LeftHandRing4'] =left_ring_finger_tip
-                        file_data['Character1_LeftHandPinky1'] =left_pinky_mcp
-                        file_data['Character1_LeftHandPinky2'] =left_pinky_pip
-                        file_data['Character1_LeftHandPinky3'] =left_pinky_dip
-                        file_data['Character1_LeftHandPinky4'] =left_pinky_tip
+                    else:
+                        left_wrist_x[frame] = 1234
+                        left_thumb_cmc_x[frame] = 1234
+                        left_thumb_mcp_x[frame] = 1234
+                        left_thumb_ip_x[frame] = 1234
+                        left_thumb_tip_x[frame] = 1234
+                        left_index_finger_mcp_x[frame] = 1234
+                        left_index_finger_pip_x[frame] = 1234
+                        left_index_finger_dip_x[frame] = 1234
+                        left_index_finger_tip[frame] = 1234
+                        left_middle_finger_mcp_x[frame] = 1234
+                        left_middle_finger_pip_x[frame] = 1234
+                        left_middle_finger_dip_x[frame] = 1234
+                        left_middle_finger_tip_x[frame] = 1234
+                        left_ring_finger_mcp_x[frame] = 1234
+                        left_ring_finger_pip_x[frame] = 1234
+                        left_ring_finger_dip_x[frame] = 1234
+                        left_ring_finger_tip_x[frame] = 1234
+                        left_pinky_mcp_x[frame] = 1234
+                        left_pinky_pip_x[frame] = 1234
+                        left_pinky_dip_x[frame] = 1234
+                        left_pinky_tip_x[frame] = 1234
+
+                        left_wrist_y[frame] = 1234
+                        left_thumb_cmc_y[frame] = 1234
+                        left_thumb_mcp_y[frame] = 1234
+                        left_thumb_ip_y[frame] = 1234
+                        left_thumb_tip_y[frame] = 1234
+                        left_index_finger_mcp_y[frame] = 1234
+                        left_index_finger_pip_y[frame] = 1234
+                        left_index_finger_dip_y[frame] = 1234
+                        left_index_finger_tip_y[frame] = 1234
+                        left_middle_finger_mcp_y[frame] = 1234
+                        left_middle_finger_pip_y[frame] = 1234
+                        left_middle_finger_dip_y[frame] = 1234
+                        left_middle_finger_tip_y[frame] = 1234
+                        left_ring_finger_mcp_y[frame] = 1234
+                        left_ring_finger_pip_y[frame] = 1234
+                        left_ring_finger_dip_y[frame] = 1234
+                        left_ring_finger_tip_y[frame] = 1234
+                        left_pinky_mcp_y[frame] = 1234
+                        left_pinky_pip_y[frame] = 1234
+                        left_pinky_dip_y[frame] = 1234
+                        left_pinky_tip_y[frame] = 1234
+
+                        left_wrist_z[frame] = 1234
+                        left_thumb_cmc_z[frame] = 1234
+                        left_thumb_mcp_z[frame] = 1234
+                        left_thumb_ip_z[frame] = 1234
+                        left_thumb_tip_z[frame] = 1234
+                        left_index_finger_mcp_z[frame] = 1234
+                        left_index_finger_pip_z[frame] = 1234
+                        left_index_finger_dip_z[frame] = 1234
+                        left_index_finger_tip_z[frame] = 1234
+                        left_middle_finger_mcp_z[frame] = 1234
+                        left_middle_finger_pip_z[frame] = 1234
+                        left_middle_finger_dip_z[frame] = 1234
+                        left_middle_finger_tip_z[frame] = 1234
+                        left_ring_finger_mcp_z[frame] = 1234
+                        left_ring_finger_pip_z[frame] = 1234
+                        left_ring_finger_dip_z[frame] = 1234
+                        left_ring_finger_tip_z[frame] = 1234
+                        left_pinky_mcp_z[frame] = 1234
+                        left_pinky_pip_z[frame] = 1234
+                        left_pinky_dip_z[frame] = 1234
+                        left_pinky_tip_z[frame] = 1234
+
+                    file_data['Character1_LeftHand'] = left_wrist
+                    file_data['Character1_LeftHandThumb1'] = left_thumb_cmc
+                    file_data['Character1_LeftHandThumb2'] = left_thumb_mcp
+                    file_data['Character1_LeftHandThumb3'] = left_thumb_ip
+                    file_data['Character1_LeftHandThumb4'] = left_thumb_tip
+                    file_data['Character1_LeftHandIndex1'] = left_index_finger_mcp
+                    file_data['Character1_LeftHandIndex2'] = left_index_finger_pip
+                    file_data['Character1_LeftHandIndex3'] = left_index_finger_dip
+                    file_data['Character1_LeftHandIndex4'] = left_index_finger_tip
+                    file_data['Character1_LeftHandMiddle1'] = left_middle_finger_mcp
+                    file_data['Character1_LeftHandMiddle2'] = left_middle_finger_pip
+                    file_data['Character1_LeftHandMiddle3'] = left_middle_finger_dip
+                    file_data['Character1_LeftHandMiddle4'] = left_middle_finger_tip
+                    file_data['Character1_LeftHandRing1'] = left_ring_finger_mcp
+                    file_data['Character1_LeftHandRing2'] = left_ring_finger_pip
+                    file_data['Character1_LeftHandRing3'] = left_ring_finger_dip
+                    file_data['Character1_LeftHandRing4'] = left_ring_finger_tip
+                    file_data['Character1_LeftHandPinky1'] = left_pinky_mcp
+                    file_data['Character1_LeftHandPinky2'] = left_pinky_pip
+                    file_data['Character1_LeftHandPinky3'] = left_pinky_dip
+                    file_data['Character1_LeftHandPinky4'] = left_pinky_tip
 
                     # 오른손 데이터
                     if results.right_hand_landmarks:
@@ -1503,27 +1593,94 @@ class MotionData:
                         right_pinky_tip_z[frame] = results.right_hand_landmarks.landmark[mp_hands.HandLandmark.PINKY_TIP].z - \
                                                    results.right_hand_landmarks.landmark[mp_hands.HandLandmark.PINKY_DIP].z
 
-                        file_data['Character1_RightHand'] =right_wrist
-                        file_data['Character1_RightHandThumb1'] =right_thumb_cmc
-                        file_data['Character1_RightHandThumb2'] =right_thumb_mcp
-                        file_data['Character1_RightHandThumb3'] =right_thumb_ip
-                        file_data['Character1_RightHandThumb4'] =right_thumb_tip
-                        file_data['Character1_RightHandIndex1'] =right_index_finger_mcp
-                        file_data['Character1_RightHandIndex2'] =right_index_finger_pip
-                        file_data['Character1_RightHandIndex3'] =right_index_finger_dip
-                        file_data['Character1_RightHandIndex4'] =right_index_finger_tip
-                        file_data['Character1_RightHandMiddle1'] =right_middle_finger_mcp
-                        file_data['Character1_RightHandMiddle2'] =right_middle_finger_pip
-                        file_data['Character1_RightHandMiddle3'] =right_middle_finger_dip
-                        file_data['Character1_RightHandMiddle4'] =right_middle_finger_tip
-                        file_data['Character1_RightHandRing1'] =right_ring_finger_mcp
-                        file_data['Character1_RightHandRing2'] =right_ring_finger_pip
-                        file_data['Character1_RightHandRing3'] =right_ring_finger_dip
-                        file_data['Character1_RightHandRing4'] =right_ring_finger_tip
-                        file_data['Character1_RightHandPinky1'] =right_pinky_mcp
-                        file_data['Character1_RightHandPinky2'] =right_pinky_pip
-                        file_data['Character1_RightHandPinky3'] =right_pinky_dip
-                        file_data['Character1_RightHandPinky4'] =right_pinky_tip
+                    else:
+                        right_wrist_x[frame] = 1234
+                        right_thumb_cmc_x[frame] = 1234
+                        right_thumb_mcp_x[frame] = 1234
+                        right_thumb_ip_x[frame] = 1234
+                        right_thumb_tip_x[frame] = 1234
+                        right_index_finger_mcp_x[frame] = 1234
+                        right_index_finger_pip_x[frame] = 1234
+                        right_index_finger_dip_x[frame] = 1234
+                        right_index_finger_tip[frame] = 1234
+                        right_middle_finger_mcp_x[frame] = 1234
+                        right_middle_finger_pip_x[frame] = 1234
+                        right_middle_finger_dip_x[frame] = 1234
+                        right_middle_finger_tip_x[frame] = 1234
+                        right_ring_finger_mcp_x[frame] = 1234
+                        right_ring_finger_pip_x[frame] = 1234
+                        right_ring_finger_dip_x[frame] = 1234
+                        right_ring_finger_tip_x[frame] = 1234
+                        right_pinky_mcp_x[frame] = 1234
+                        right_pinky_pip_x[frame] = 1234
+                        right_pinky_dip_x[frame] = 1234
+                        right_pinky_tip_x[frame] = 1234
+
+                        right_wrist_y[frame] = 1234
+                        right_thumb_cmc_y[frame] = 1234
+                        right_thumb_mcp_y[frame] = 1234
+                        right_thumb_ip_y[frame] = 1234
+                        right_thumb_tip_y[frame] = 1234
+                        right_index_finger_mcp_y[frame] = 1234
+                        right_index_finger_pip_y[frame] = 1234
+                        right_index_finger_dip_y[frame] = 1234
+                        right_index_finger_tip_y[frame] = 1234
+                        right_middle_finger_mcp_y[frame] = 1234
+                        right_middle_finger_pip_y[frame] = 1234
+                        right_middle_finger_dip_y[frame] = 1234
+                        right_middle_finger_tip_y[frame] = 1234
+                        right_ring_finger_mcp_y[frame] = 1234
+                        right_ring_finger_pip_y[frame] = 1234
+                        right_ring_finger_dip_y[frame] = 1234
+                        right_ring_finger_tip_y[frame] = 1234
+                        right_pinky_mcp_y[frame] = 1234
+                        right_pinky_pip_y[frame] = 1234
+                        right_pinky_dip_y[frame] = 1234
+                        right_pinky_tip_y[frame] = 1234
+
+                        right_wrist_z[frame] = 1234
+                        right_thumb_cmc_z[frame] = 1234
+                        right_thumb_mcp_z[frame] = 1234
+                        right_thumb_ip_z[frame] = 1234
+                        right_thumb_tip_z[frame] = 1234
+                        right_index_finger_mcp_z[frame] = 1234
+                        right_index_finger_pip_z[frame] = 1234
+                        right_index_finger_dip_z[frame] = 1234
+                        right_index_finger_tip_z[frame] = 1234
+                        right_middle_finger_mcp_z[frame] = 1234
+                        right_middle_finger_pip_z[frame] = 1234
+                        right_middle_finger_dip_z[frame] = 1234
+                        right_middle_finger_tip_z[frame] = 1234
+                        right_ring_finger_mcp_z[frame] = 1234
+                        right_ring_finger_pip_z[frame] = 1234
+                        right_ring_finger_dip_z[frame] = 1234
+                        right_ring_finger_tip_z[frame] = 1234
+                        right_pinky_mcp_z[frame] = 1234
+                        right_pinky_pip_z[frame] = 1234
+                        right_pinky_dip_z[frame] = 1234
+                        right_pinky_tip_z[frame] = 1234
+
+                    file_data['Character1_RightHand'] = right_wrist
+                    file_data['Character1_RightHandThumb1'] = right_thumb_cmc
+                    file_data['Character1_RightHandThumb2'] = right_thumb_mcp
+                    file_data['Character1_RightHandThumb3'] = right_thumb_ip
+                    file_data['Character1_RightHandThumb4'] = right_thumb_tip
+                    file_data['Character1_RightHandIndex1'] = right_index_finger_mcp
+                    file_data['Character1_RightHandIndex2'] = right_index_finger_pip
+                    file_data['Character1_RightHandIndex3'] = right_index_finger_dip
+                    file_data['Character1_RightHandIndex4'] = right_index_finger_tip
+                    file_data['Character1_RightHandMiddle1'] = right_middle_finger_mcp
+                    file_data['Character1_RightHandMiddle2'] = right_middle_finger_pip
+                    file_data['Character1_RightHandMiddle3'] = right_middle_finger_dip
+                    file_data['Character1_RightHandMiddle4'] = right_middle_finger_tip
+                    file_data['Character1_RightHandRing1'] = right_ring_finger_mcp
+                    file_data['Character1_RightHandRing2'] = right_ring_finger_pip
+                    file_data['Character1_RightHandRing3'] = right_ring_finger_dip
+                    file_data['Character1_RightHandRing4'] = right_ring_finger_tip
+                    file_data['Character1_RightHandPinky1'] = right_pinky_mcp
+                    file_data['Character1_RightHandPinky2'] = right_pinky_pip
+                    file_data['Character1_RightHandPinky3'] = right_pinky_dip
+                    file_data['Character1_RightHandPinky4'] = right_pinky_tip
 
                     file_data["frames"] = frame
 
