@@ -25,30 +25,22 @@ https://kookmin-sw.github.io/capstone-2021-30/
     Student ID: 20153177
     E-Mail: 
     Role: 팀장, 음성 데이터 관리
-    
-###
-
+  
     Name: 김명호
     Student ID: 20151772
     E-Mail: kmaengggong@kookmin.ac.kr
     Role: 수어 데이터 관리
-    
-###
-
+  
     Name: 박인혜
     Student ID: 20165151
     E-Mail: 
     Role: 아바타 모델링
-    
-###
-
+  
     Name: 조가성
     Student ID: 20171704
     E-Mail: 
     Role: 아바타 모델링
-    
-###
-
+  
     Name: 김유진
     Student ID: 20185283
     E-Mail: 
