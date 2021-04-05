@@ -9,11 +9,13 @@ WhatSub? : What's up?(인삿말) + Subtitles(자막)
 
 <https://kookmin-sw.github.io/capstone-2021-30/>
 
+## 중간 발표 자료
+https://docs.google.com/presentation/d/1RFCkMSYYocAjv-2YBMx7p4LZh5xJnpjURCI2nXuHS_Y/edit?usp=sharing
+
 ## 프로젝트 소개
 
 <img src="./img/signlang.png" width="200" height="200">
 
-https://docs.google.com/presentation/d/1RFCkMSYYocAjv-2YBMx7p4LZh5xJnpjURCI2nXuHS_Y/edit?usp=sharing
 
 **"수많은 영상들이 쏟아지는 오늘날, 농인들의 도움이 되고자 하는 프로젝트"**
 
