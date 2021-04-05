@@ -1,10 +1,10 @@
 # WhatSub?
 
-## 0. 팀페이지 주소
+## 팀페이지 주소
 
 <https://kookmin-sw.github.io/capstone-2021-30/>
 
-## 1. 프로젝트 소개
+## 프로젝트 소개
 
 <img src="/img/signlang.png" width="200" height="200">
 
@@ -28,7 +28,7 @@
 - 여러 종류의 영상을 번역하여 수어 자막으로 변환
 - 편의성을 위해 영상 바로 옆에서 수어 자막을 재생
 
-## 2. 팀 소개
+## 팀 소개
 ~~~
 Name: 박상욱
 Student ID: 20153177
