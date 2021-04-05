@@ -1,5 +1,8 @@
 # WhatSub?
-2021-cpastone-30
+
+~~~
+WhatSub? : What's up?(인삿말) + Sub(자막). 기존에 존재하는 일반 자막이 아닌, 새로운 형태의 자막, 즉 수어 자막을 의미
+~~~
 
 ## 팀페이지 주소
 
@@ -7,7 +10,7 @@
 
 ## 프로젝트 소개
 
-<img src="/img/signlang.png" width="200" height="200">
+<img src="./img/signlang.png" width="200" height="200">
 
 **"수많은 영상들이 쏟아지는 오늘날, 농인들의 도움이 되고자 하는 프로젝트"**
 
