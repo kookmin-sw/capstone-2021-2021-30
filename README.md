@@ -6,7 +6,8 @@
 
 ## 1. 프로젝트 소개
 
-![signlang](./img/signlang.png)
+![signlang](./img/signlang.png){: width="100", height="100"}
+
 **"수많은 영상들이 쏟아지는 오늘날, 농인들의 도움이 되고자 하는 프로젝트"**
 
 ### 개요
