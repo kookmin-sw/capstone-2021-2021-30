@@ -20,36 +20,36 @@ https://kookmin-sw.github.io/capstone-2021-30/
 프로젝트 소개하는 영상을 추가하세요
 
 ## 3. 팀 소개
-~~~~~~~
+~~~
 Name: 박상욱
 Student ID: 20153177
-E-Mail: 
+E-Mail: apach6@naver.com
 Role: 팀장, 음성 데이터 관리
-~~~~~~~
-~~~~~~~
+~~~
+~~~
 Name: 김명호
 Student ID: 20151772
 E-Mail: kmaengggong@kookmin.ac.kr
 Role: 수어 데이터 관리
-~~~~~~~
-~~~~~~~
+~~~
+~~~
 Name: 박인혜
 Student ID: 20165151
-E-Mail: 
+E-Mail: alsldjwm2@kookmin.ac.kr
 Role: 아바타 모델링
-~~~~~~~
-~~~~~~~
+~~~
+~~~
 Name: 조가성
 Student ID: 20171704
-E-Mail: 
+E-Mail: 1138709428@qq.com
 Role: 아바타 모델링
-~~~~~~~
-~~~~~~~
+~~~
+~~~
 Name: 김유진
 Student ID: 20185283
-E-Mail: 
+E-Mail: yujingim@kookmin.ac.kr
 Role: 음성 데이터 관리
-~~~~~~~
+~~~
 
 ## 4. 사용법
 
