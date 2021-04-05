@@ -1,5 +1,5 @@
 # WhatSub?
-2021-cpaston30
+2021-cpastone-30
 
 ## 팀페이지 주소
 
