@@ -20,6 +20,7 @@ def setKeyframes():
                     yVal = json_data[obj]['y'][str(frame)]
                     zVal = json_data[obj]['z'][str(frame)]
                     
+                    # 양 어깨는 그 전의 좌표를 통해 translation을 구할 수 없음
                     if obj == 'Character1_LeftArm':
                         xVal = 10.707
                         yVal = 0
@@ -32,8 +33,7 @@ def setKeyframes():
                         cmds.setKeyframe(obj + '.translateZ', value=zVal, time=frame*falpha)
                         cmds.setKeyframe(obj + '.rotateX', value=xRot, time=frame*falpha)
                         cmds.setKeyframe(obj + '.rotateY', value=yRot, time=frame*falpha)
-                        cmds.setKeyframe(obj + '.rotateZ', value=zRot, time=frame*falpha)
-                        
+                        cmds.setKeyframe(obj + '.rotateZ', value=zRot, time=frame*falpha) 
                     elif obj == 'Character1_RightArm':
                         xVal = -10.707
                         yVal = 0
@@ -47,13 +47,63 @@ def setKeyframes():
                         cmds.setKeyframe(obj + '.rotateX', value=xRot, time=frame*falpha)
                         cmds.setKeyframe(obj + '.rotateY', value=yRot, time=frame*falpha)
                         cmds.setKeyframe(obj + '.rotateZ', value=zRot, time=frame*falpha)
-                        #xRot = math.atan(-yVal/zVal)
-                        #yRot = math.atan(-zVal/xVal)
-                        #zRot = math.atan(-xVal/yVal)
-                        #cmds.setKeyframe(obj + '.rotateX', value=xRot, time=frame*10)
-                        #cmds.setKeyframe(obj + '.rotateY', value=yRot, time=frame*10)
-                        #cmds.setKeyframe(obj + '.rotateZ', value=zRot, time=frame*10)
+                    
+                    # 팔꿈치 기본 방향    
+                    elif obj == 'Character1_LeftForeArm':
+                        xRot = -17.5
+                        yRot = 4.75
+                        zRot = 48.5
+                        cmds.setKeyframe(obj + '.rotateX', value=xRot, time=frame*falpha)
+                        cmds.setKeyframe(obj + '.rotateY', value=yRot, time=frame*falpha)
+                        cmds.setKeyframe(obj + '.rotateZ', value=zRot, time=frame*falpha)
+                        cmds.setKeyframe(obj + '.translateX', value=xVal*alpha, time=frame*falpha)
+                        cmds.setKeyframe(obj + '.translateY', value=yVal*alpha, time=frame*falpha)
+                        cmds.setKeyframe(obj + '.translateZ', value=-zVal*alpha, time=frame*falpha)
+                    elif obj == 'Character1_RightForeArm':
+                        xRot = 17.5
+                        yRot = -4.75
+                        zRot = -48.5
+                        cmds.setKeyframe(obj + '.rotateX', value=xRot, time=frame*falpha)
+                        cmds.setKeyframe(obj + '.rotateY', value=yRot, time=frame*falpha)
+                        cmds.setKeyframe(obj + '.rotateZ', value=zRot, time=frame*falpha)
+                        cmds.setKeyframe(obj + '.translateX', value=xVal*alpha, time=frame*falpha)
+                        cmds.setKeyframe(obj + '.translateY', value=yVal*alpha, time=frame*falpha)
+                        cmds.setKeyframe(obj + '.translateZ', value=-zVal*alpha, time=frame*falpha)
                         
+                    # 손이 안보이는 경우 밑으로 향하게
+                    elif obj == 'Character1_LeftHand':
+                        if xVal == 1234:
+                            xRot = 28 #16
+                            cmds.setKeyframe(obj + '.rotateX', value=xRot, time=frame*falpha)
+                        else:
+                            cmds.setKeyframe(obj + '.translateX', value=-xVal*alpha, time=frame*falpha)
+                        if yVal == 1234:
+                            yRot = -20.5 #4.5
+                            cmds.setKeyframe(obj + '.rotateY', value=yRot, time=frame*falpha)
+                        else:
+                            cmds.setKeyframe(obj + '.translateY', value=yVal*alpha, time=frame*falpha)
+                        if zVal == 1234:
+                            zRot = -37.5 #-100
+                            cmds.setKeyframe(obj + '.rotateZ', value=zRot, time=frame*falpha)
+                        else:
+                            cmds.setKeyframe(obj + '.translateZ', value=zVal*alpha, time=frame*falpha)
+                    elif obj == 'Character1_RightHand':
+                        if xVal == 1234:
+                            xRot = -28 #-16
+                            cmds.setKeyframe(obj + '.rotateX', value=xRot, time=frame*falpha)
+                        else:
+                            cmds.setKeyframe(obj + '.translateX', value=-xVal*alpha, time=frame*falpha)
+                        if yVal == 1234:
+                            yRot = 20.5 #-4.5
+                            cmds.setKeyframe(obj + '.rotateY', value=yRot, time=frame*falpha)
+                        else:
+                            cmds.setKeyframe(obj + '.translateY', value=yVal*alpha, time=frame*falpha)
+                        if zVal == 1234:
+                            zRot = 37.5 #100
+                            cmds.setKeyframe(obj + '.rotateZ', value=zRot, time=frame*falpha)
+                        else:
+                            cmds.setKeyframe(obj + '.translateZ', value=zVal*alpha, time=frame*falpha)
+                            
                     else:
                         if xVal != 1234:
                             cmds.setKeyframe(obj + '.translateX', value=xVal*alpha, time=frame*falpha)
