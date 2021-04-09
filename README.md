@@ -10,7 +10,7 @@ WhatSub? : What's up?(인삿말) + Subtitles(자막)
 <https://kookmin-sw.github.io/capstone-2021-30/>
 
 ## 중간 발표 자료
-https://docs.google.com/presentation/d/1plX7LHXxjTggJtkOgSTEUM395ATkYLHDWRFBTE_Ff6s/edit#slide=id.p17
+https://docs.google.com/presentation/d/1plX7LHXxjTggJtkOgSTEUM395ATkYLHDWRFBTE_Ff6s/edit#slide=id.p1
 
 ## 프로젝트 소개
 
