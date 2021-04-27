@@ -1,4 +1,6 @@
-import sys
+import cv2, os, sys, time
+from pytube import YouTube
+from PIL import Image
 import file_name_changer as fc
 import motion_data as md
 from PyQt5.QtWidgets import *
@@ -92,6 +94,59 @@ class MainWindow(QWidget):
 
             motion.getHolisticData3(self.selected_list[j])
 
+class VideoEditer:
+    def getVideoAndAudio(self, download_path):
+        yt = YouTube(input("url path: "))
+
+        videos = yt.streams.filter(file_extension='mp4')
+        for i in range(len(videos)):
+            print(i, '. ', videos[i])
+        video_num = int(input("select video resolution: "))
+        videos[video_num].download(download_path + "videos/")
+
+        audios = yt.streams.filter(only_audio=True)
+        for i in range(len(audios)):
+            print(i, '. ', audios[i])
+        audio_num = int(input("select audio resolution: "))
+        audios[audio_num].download(download_path + "audios/")
+
+        print("video download completed...")
+
+    def videoToFrameImages(self, download_path, fps):
+        count = 0
+        cap = cv2.VideoCapture(download_path + "videos/[출근길 날씨] 맑고 큰 일교차…수도권·충청 황사 영향  KBS 20210317.mp4")
+
+        def getFrame(sec):
+            cap.set(cv2.CAP_PROP_POS_MSEC, sec * 1000)
+            hasFrames, image = cap.read()
+            if hasFrames:
+                cv2.imwrite(download_path + "images/%d.jpg" % count, image)
+            return hasFrames
+
+        sec = 0
+        success = getFrame(sec)
+        while success:
+            sec += 1./fps
+            sec = round(sec, 2)
+            success = getFrame(sec)
+            print("%d.jpg done" % count)
+            count += 1
+
+        cap.release()
+
+        print("frame image save completed...")
+
+    def cropVideo(self, download_path, crop_area):
+        file_list = os.listdir(download_path + "images/")
+
+        for file in file_list:
+            img = Image.open(download_path + "images/" + file)
+            crop_img = img.crop(crop_area)
+            crop_img.save("D:/youtube/crop_images/%s" % file)
+            print("%s done" % file)
+
+        print("image cropped completed...")
+
 def main():
     app = QApplication(sys.argv)
     main_window = MainWindow()
@@ -107,4 +162,25 @@ if __name__ == '__main__':
     '''
 
     # UI 실행
-    main()
+    #main()
+
+    # 영상 편집 클래스
+    # 날씨 주소 : https://www.youtube.com/watch?v=mlE_AfipkNs&list=PL0Hzp0A3iLSxHccWBo2n_Ps8bPwDO-Mb_&index=4&ab_channel=KBSNews
+    # 총 84초
+    download_path = "D:/youtube/"
+    ve = VideoEditer
+
+    #ve.getVideoAndAudio(ve, download_path)  # 유튜브 동영상 저장 및 오디오 추출
+    #ve.videoToFrameImages(ve, download_path, 5)  # 유튜브 영상 -> 프레임 이미지
+    #crop_area = (1080, 490, 1248, 653)
+    #crop_area = (1620, 735, 1872, 980)
+    #ve.cropVideo(ve, download_path, crop_area)  # 프레임 이미지 -> 수화 부분만 저장
+
+    # 수화 부분만 저장된 이미지의 키포인트 구하기
+    mdata = md.MotionData
+    mdata.getDataFromImages(mdata, download_path)
+
+
+
+    sys.exit()
+
