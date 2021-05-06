@@ -101,10 +101,11 @@ class mainKeypoint:
 
     # url을 입력 받아 동영상과 오디오 다운로드
     def getVideoAndAudio(self):
-        # 예) 날씨 영상 (84초) : https://www.youtube.com/watch?v=mlE_AfipkNs&list=PL0Hzp0A3iLSxHccWBo2n_Ps8bPwDO-Mb_&index=4&ab_channel=KBSNews
+        # 예) 날씨 영상 (84초) : https://www.youtube.com/watch?v=mlE_AfipkNs&ab_channel=KBSNews
+        # 예) 경찰 영상 (277초) : https://www.youtube.com/watch?v=iirOaXy2S18&ab_channel=KBSNews
         try:
             yt = YouTube(input("\nEnter the Youtube url: "))
-            self.video_name = yt.streams[0].title.replace(".", "")
+            self.video_name = yt.streams[0].title.replace(".", "").replace("/", "")
 
             # 유튜브 동영상 다운로드
             videos = yt.streams.filter(only_video=True, file_extension='mp4')
@@ -211,7 +212,7 @@ class mainKeypoint:
         # 자를 영역값 입력 예외 처리
         # 예) (1620, 735, 1872, 980)
         try:
-            print("\nEnter the cropping location values like this (start-x, start-y, end-x, endy)")
+            print("\nEnter the cropping location values like this (start-x, start-y, end-x, endy) / (1620, 735, 1872, 980)")
             start_x = int(input("Enter the cropping start-x: "))
             start_y = int(input("Enter the cropping start-y: "))
             end_x = int(input("Enter the cropping end-x: "))

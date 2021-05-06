@@ -356,6 +356,7 @@ class getKeypoint:
         with open(json_path, 'w') as f:
             pass
 
+        # imread가 한글 경로를 인식하지 못해 대신 imencode 사용
         def imread2(filename, flags=cv2.IMREAD_COLOR, dtype=np.uint8):
             try:
                 n = np.fromfile(filename, dtype)
@@ -364,6 +365,31 @@ class getKeypoint:
             except Exception as e:
                 print(e)
                 return None
+
+        # imwrite가 한글 경로를 인식하지 못해 대신 imencode 사용
+        def imwrite2(filename, image, params=None):
+            try:
+                ext = os.path.splitext(filename)[1]
+                result, n = cv2.imencode(ext, image, params)
+                if result:
+                    with open(filename, mode='w+b') as f:
+                        n.tofile(f)
+                    return True
+                else:
+                    return False
+            except Exception as e:
+                print(e)
+                return False
+
+        # 해당 비디오 파일의 이름으로 빈 디렉토리를 생성
+        keypoint_path = download_path + "image_keypoint/" + video_name + "/"
+        try:
+            if not os.path.exists(keypoint_path):
+                os.makedirs(keypoint_path)
+            for file in os.scandir(keypoint_path):
+                os.remove(file.path)
+        except:
+            print("\n! Error: Failed to create empty directory")
 
         with mp_holistic.Holistic(
             static_image_mode=True,
@@ -382,7 +408,8 @@ class getKeypoint:
                 mp_drawing.draw_landmarks(
                     image, results.pose_landmarks, mp_holistic.UPPER_BODY_POSE_CONNECTIONS)
 
-                cv2.imwrite(download_path + "image_keypoint/" + str(file) + '.jpg', image)
+                imwrite2(keypoint_path + str(file) + ".jpg", image)
+                print(keypoint_path + str(file) + ".jpg done...")
 
                 if (results.pose_landmarks or results.left_hand_landmarks or results.right_hand_landmarks):
                     # json 파일 비어있는지 확인
