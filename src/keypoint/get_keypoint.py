@@ -607,7 +607,7 @@ class getKeypoint:
                         left_index_finger_mcp_x[frame] = -9999
                         left_index_finger_pip_x[frame] = -9999
                         left_index_finger_dip_x[frame] = -9999
-                        left_index_finger_tip[frame] = -9999
+                        left_index_finger_tip_x[frame] = -9999
                         left_middle_finger_mcp_x[frame] = -9999
                         left_middle_finger_pip_x[frame] = -9999
                         left_middle_finger_dip_x[frame] = -9999
@@ -824,7 +824,7 @@ class getKeypoint:
                         right_index_finger_mcp_x[frame] = -9999
                         right_index_finger_pip_x[frame] = -9999
                         right_index_finger_dip_x[frame] = -9999
-                        right_index_finger_tip[frame] = -9999
+                        right_index_finger_tip_x[frame] = -9999
                         right_middle_finger_mcp_x[frame] = -9999
                         right_middle_finger_pip_x[frame] = -9999
                         right_middle_finger_dip_x[frame] = -9999

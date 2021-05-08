@@ -1,289 +1,652 @@
 import maya.cmds as cmds
-import json, math
+import json, math, os
 
-def setKeyframes():
-    objs = cmds.ls(selection=True)  # ['Character1_Reference'] 형식
-    json_data = readJson('0.json')  # json 읽고
-    
-    # 선택한 오브젝트 중
-    for obj in objs:
-        alpha = 75
-        falpha = 10
-        trans = []
-        rot = []
-        frames = json_data['frames']
+class jsonToMaya:
+    # Rotation 값 저장할 리스트 46 + 46*3 (총 184)
+    def __init__(self):
+        #self.data_path = "../data/"
+        self.data_path = "D:/Workspace/GitHub/capstone-2021-2021-30/data/"
+        self.json_name = ""
+        self.json_data = None
+        self.frames = 0
 
-        if obj in json_data:
-            for frame in range(1, frames+1):
-                if str(frame) in json_data[obj]['x']:
-                    xVal = json_data[obj]['x'][str(frame)]
-                    yVal = json_data[obj]['y'][str(frame)]
-                    zVal = json_data[obj]['z'][str(frame)]
-                    
-                    # 양 어깨는 그 전의 좌표를 통해 translation을 구할 수 없음
-                    if obj == 'Character1_LeftArm':
-                        xVal = 10.707
-                        yVal = 0
-                        zVal = 0
-                        xRot = -13.77
-                        yRot = 16.044
-                        zRot = 5.257
-                        cmds.setKeyframe(obj + '.translateX', value=xVal, time=frame*falpha)
-                        cmds.setKeyframe(obj + '.translateY', value=yVal, time=frame*falpha)
-                        cmds.setKeyframe(obj + '.translateZ', value=zVal, time=frame*falpha)
-                        cmds.setKeyframe(obj + '.rotateX', value=xRot, time=frame*falpha)
-                        cmds.setKeyframe(obj + '.rotateY', value=yRot, time=frame*falpha)
-                        cmds.setKeyframe(obj + '.rotateZ', value=zRot, time=frame*falpha) 
-                    elif obj == 'Character1_RightArm':
-                        xVal = -10.707
-                        yVal = 0
-                        zVal = 0
-                        xRot = 13.77
-                        yRot = 16.044
-                        zRot = 5.257
-                        cmds.setKeyframe(obj + '.translateX', value=xVal, time=frame*falpha)
-                        cmds.setKeyframe(obj + '.translateY', value=yVal, time=frame*falpha)
-                        cmds.setKeyframe(obj + '.translateZ', value=zVal, time=frame*falpha)
-                        cmds.setKeyframe(obj + '.rotateX', value=xRot, time=frame*falpha)
-                        cmds.setKeyframe(obj + '.rotateY', value=yRot, time=frame*falpha)
-                        cmds.setKeyframe(obj + '.rotateZ', value=zRot, time=frame*falpha)
-                    
-                    # 팔꿈치 기본 방향    
-                    elif obj == 'Character1_LeftForeArm':
-                        xRot = -17.5
-                        yRot = 4.75
-                        zRot = 48.5
-                        cmds.setKeyframe(obj + '.rotateX', value=xRot, time=frame*falpha)
-                        cmds.setKeyframe(obj + '.rotateY', value=yRot, time=frame*falpha)
-                        cmds.setKeyframe(obj + '.rotateZ', value=zRot, time=frame*falpha)
-                        cmds.setKeyframe(obj + '.translateX', value=xVal*alpha, time=frame*falpha)
-                        cmds.setKeyframe(obj + '.translateY', value=yVal*alpha, time=frame*falpha)
-                        cmds.setKeyframe(obj + '.translateZ', value=-zVal*alpha, time=frame*falpha)
-                    elif obj == 'Character1_RightForeArm':
-                        xRot = 17.5
-                        yRot = -4.75
-                        zRot = -48.5
-                        cmds.setKeyframe(obj + '.rotateX', value=xRot, time=frame*falpha)
-                        cmds.setKeyframe(obj + '.rotateY', value=yRot, time=frame*falpha)
-                        cmds.setKeyframe(obj + '.rotateZ', value=zRot, time=frame*falpha)
-                        cmds.setKeyframe(obj + '.translateX', value=xVal*alpha, time=frame*falpha)
-                        cmds.setKeyframe(obj + '.translateY', value=yVal*alpha, time=frame*falpha)
-                        cmds.setKeyframe(obj + '.translateZ', value=-zVal*alpha, time=frame*falpha)
-                        
-                    # 손이 안보이는 경우 밑으로 향하게
-                    elif obj == 'Character1_LeftHand':
-                        if xVal == 1234:
-                            xRot = 28 #16
-                            cmds.setKeyframe(obj + '.rotateX', value=xRot, time=frame*falpha)
-                        else:
-                            cmds.setKeyframe(obj + '.translateX', value=-xVal*alpha, time=frame*falpha)
-                        if yVal == 1234:
-                            yRot = -20.5 #4.5
-                            cmds.setKeyframe(obj + '.rotateY', value=yRot, time=frame*falpha)
-                        else:
-                            cmds.setKeyframe(obj + '.translateY', value=yVal*alpha, time=frame*falpha)
-                        if zVal == 1234:
-                            zRot = -37.5 #-100
-                            cmds.setKeyframe(obj + '.rotateZ', value=zRot, time=frame*falpha)
-                        else:
-                            cmds.setKeyframe(obj + '.translateZ', value=zVal*alpha, time=frame*falpha)
-                    elif obj == 'Character1_RightHand':
-                        if xVal == 1234:
-                            xRot = -28 #-16
-                            cmds.setKeyframe(obj + '.rotateX', value=xRot, time=frame*falpha)
-                        else:
-                            cmds.setKeyframe(obj + '.translateX', value=-xVal*alpha, time=frame*falpha)
-                        if yVal == 1234:
-                            yRot = 20.5 #-4.5
-                            cmds.setKeyframe(obj + '.rotateY', value=yRot, time=frame*falpha)
-                        else:
-                            cmds.setKeyframe(obj + '.translateY', value=yVal*alpha, time=frame*falpha)
-                        if zVal == 1234:
-                            zRot = 37.5 #100
-                            cmds.setKeyframe(obj + '.rotateZ', value=zRot, time=frame*falpha)
-                        else:
-                            cmds.setKeyframe(obj + '.translateZ', value=zVal*alpha, time=frame*falpha)
-                            
-                    else:
-                        if xVal != 1234:
-                            cmds.setKeyframe(obj + '.translateX', value=xVal*alpha, time=frame*falpha)
-                        if yVal != 1234:
-                            cmds.setKeyframe(obj + '.translateY', value=yVal*alpha, time=frame*falpha)
-                        if zVal != 1234:
-                            cmds.setKeyframe(obj + '.translateZ', value=-zVal*alpha, time=frame*falpha)
-          
-        else:
-            for frame in range(1, frames + 1):
-                trans = cmds.getAttr(obj + '.translate')
-                rot = cmds.getAttr(obj + '.rotate')
+        self.left_shoulder = dict()
+        self.left_elbow = dict()
+        self.left_wrist = dict()
+        self.left_thumb_cmc = dict()
+        self.left_thumb_mcp = dict()
+        self.left_thumb_ip = dict()
+        self.left_thumb_tip = dict()
+        self.left_index_finger_mcp = dict()
+        self.left_index_finger_pip = dict()
+        self.left_index_finger_dip = dict()
+        self.left_index_finger_tip = dict()
+        self.left_middle_finger_mcp = dict()
+        self.left_middle_finger_pip = dict()
+        self.left_middle_finger_dip = dict()
+        self.left_middle_finger_tip = dict()
+        self.left_ring_finger_mcp = dict()
+        self.left_ring_finger_pip = dict()
+        self.left_ring_finger_dip = dict()
+        self.left_ring_finger_tip = dict()
+        self.left_pinky_mcp = dict()
+        self.left_pinky_pip = dict()
+        self.left_pinky_dip = dict()
+        self.left_pinky_tip = dict()
+        self.right_shoulder = dict()
+        self.right_elbow = dict()
+        self.right_wrist = dict()
+        self.right_thumb_cmc = dict()
+        self.right_thumb_mcp = dict()
+        self.right_thumb_ip = dict()
+        self.right_thumb_tip = dict()
+        self.right_index_finger_mcp = dict()
+        self.right_index_finger_pip = dict()
+        self.right_index_finger_dip = dict()
+        self.right_index_finger_tip = dict()
+        self.right_middle_finger_mcp = dict()
+        self.right_middle_finger_pip = dict()
+        self.right_middle_finger_dip = dict()
+        self.right_middle_finger_tip = dict()
+        self.right_ring_finger_mcp = dict()
+        self.right_ring_finger_pip = dict()
+        self.right_ring_finger_dip = dict()
+        self.right_ring_finger_tip = dict()
+        self.right_pinky_mcp = dict()
+        self.right_pinky_pip = dict()
+        self.right_pinky_dip = dict()
+        self.right_pinky_tip = dict()
 
-                cmds.setKeyframe(obj + '.translateX', value=trans[0][0], time=frame*falpha)
-                cmds.setKeyframe(obj + '.translateY', value=trans[0][1], time=frame*falpha)
-                cmds.setKeyframe(obj + '.translateZ', value=trans[0][2], time=frame*falpha)
-                cmds.setKeyframe(obj + '.rotateX', value=rot[0][0], time=frame*falpha)
-                cmds.setKeyframe(obj + '.rotateY', value=rot[0][1], time=frame*falpha)
-                cmds.setKeyframe(obj + '.rotateZ', value=rot[0][2], time=frame*falpha)
+        self.left_shoulder_x = dict()
+        self.left_elbow_x = dict()
+        self.left_wrist_x = dict()
+        self.left_thumb_cmc_x = dict()
+        self.left_thumb_mcp_x = dict()
+        self.left_thumb_ip_x = dict()
+        self.left_thumb_tip_x = dict()
+        self.left_index_finger_mcp_x = dict()
+        self.left_index_finger_pip_x = dict()
+        self.left_index_finger_dip_x = dict()
+        self.left_index_finger_tip_x = dict()
+        self.left_middle_finger_mcp_x = dict()
+        self.left_middle_finger_pip_x = dict()
+        self.left_middle_finger_dip_x = dict()
+        self.left_middle_finger_tip_x = dict()
+        self.left_ring_finger_mcp_x = dict()
+        self.left_ring_finger_pip_x = dict()
+        self.left_ring_finger_dip_x = dict()
+        self.left_ring_finger_tip_x = dict()
+        self.left_pinky_mcp_x = dict()
+        self.left_pinky_pip_x = dict()
+        self.left_pinky_dip_x = dict()
+        self.left_pinky_tip_x = dict()
+        self.right_shoulder_x = dict()
+        self.right_elbow_x = dict()
+        self.right_wrist_x = dict()
+        self.right_thumb_cmc_x = dict()
+        self.right_thumb_mcp_x = dict()
+        self.right_thumb_ip_x = dict()
+        self.right_thumb_tip_x = dict()
+        self.right_index_finger_mcp_x = dict()
+        self.right_index_finger_pip_x = dict()
+        self.right_index_finger_dip_x = dict()
+        self.right_index_finger_tip_x = dict()
+        self.right_middle_finger_mcp_x = dict()
+        self.right_middle_finger_pip_x = dict()
+        self.right_middle_finger_dip_x = dict()
+        self.right_middle_finger_tip_x = dict()
+        self.right_ring_finger_mcp_x = dict()
+        self.right_ring_finger_pip_x = dict()
+        self.right_ring_finger_dip_x = dict()
+        self.right_ring_finger_tip_x = dict()
+        self.right_pinky_mcp_x = dict()
+        self.right_pinky_pip_x = dict()
+        self.right_pinky_dip_x = dict()
+        self.right_pinky_tip_x = dict()
 
-def initPosition():
-    '''
-    cmds.setKeyframe("Character1_LeftArm.translateX", value=10.707, time=0)
-    cmds.setKeyframe("Character1_LeftArm.translateY", value=-0, time=0)
-    cmds.setKeyframe("Character1_LeftArm.translateZ", value=0, time=0)
-    cmds.setKeyframe("Character1_LeftArm.rotateX", value=0, time=0)
-    cmds.setKeyframe("Character1_LeftArm.rotateY", value=0, time=0)
-    cmds.setKeyframe("Character1_LeftArm.rotateZ", value=0, time=0)
+        self.left_shoulder_y = dict()
+        self.left_elbow_y = dict()
+        self.left_wrist_y = dict()
+        self.left_thumb_cmc_y = dict()
+        self.left_thumb_mcp_y = dict()
+        self.left_thumb_ip_y = dict()
+        self.left_thumb_tip_y = dict()
+        self.left_index_finger_mcp_y = dict()
+        self.left_index_finger_pip_y = dict()
+        self.left_index_finger_dip_y = dict()
+        self.left_index_finger_tip_y = dict()
+        self.left_middle_finger_mcp_y = dict()
+        self.left_middle_finger_pip_y = dict()
+        self.left_middle_finger_dip_y = dict()
+        self.left_middle_finger_tip_y = dict()
+        self.left_ring_finger_mcp_y = dict()
+        self.left_ring_finger_pip_y = dict()
+        self.left_ring_finger_dip_y = dict()
+        self.left_ring_finger_tip_y = dict()
+        self.left_pinky_mcp_y = dict()
+        self.left_pinky_pip_y = dict()
+        self.left_pinky_dip_y = dict()
+        self.left_pinky_tip_y = dict()
+        self.right_shoulder_y = dict()
+        self.right_elbow_y = dict()
+        self.right_wrist_y = dict()
+        self.right_thumb_cmc_y = dict()
+        self.right_thumb_mcp_y = dict()
+        self.right_thumb_ip_y = dict()
+        self.right_thumb_tip_y = dict()
+        self.right_index_finger_mcp_y = dict()
+        self.right_index_finger_pip_y = dict()
+        self.right_index_finger_dip_y = dict()
+        self.right_index_finger_tip_y = dict()
+        self.right_middle_finger_mcp_y = dict()
+        self.right_middle_finger_pip_y = dict()
+        self.right_middle_finger_dip_y = dict()
+        self.right_middle_finger_tip_y = dict()
+        self.right_ring_finger_mcp_y = dict()
+        self.right_ring_finger_pip_y = dict()
+        self.right_ring_finger_dip_y = dict()
+        self.right_ring_finger_tip_y = dict()
+        self.right_pinky_mcp_y = dict()
+        self.right_pinky_pip_y = dict()
+        self.right_pinky_dip_y = dict()
+        self.right_pinky_tip_y = dict()
 
-    cmds.setKeyframe("Character1_RightArm.translateX", value=-10.707, time=0)
-    cmds.setKeyframe("Character1_RightArm.translateY", value=0, time=0)
-    cmds.setKeyframe("Character1_RightArm.translateZ", value=-0, time=0)
-    cmds.setKeyframe("Character1_RightArm.rotateX", value=0, time=0)
-    cmds.setKeyframe("Character1_RightArm.rotateY", value=0, time=0)
-    cmds.setKeyframe("Character1_RightArm.rotateZ", value=0, time=0)
-    '''
-    cmds.setKeyframe("Character1_LeftArm.translateX", value=10.707, time=0)
-    cmds.setKeyframe("Character1_LeftArm.translateY", value=-0, time=0)
-    cmds.setKeyframe("Character1_LeftArm.translateZ", value=0, time=0)
-    #cmds.setKeyframe("Character1_LeftArm.rotate", 10, -6, -75)
-    cmds.setKeyframe("Character1_LeftForeArm.translateX", value=27.305, time=0)
-    cmds.setKeyframe("Character1_LeftForeArm.translateY", value=0.001, time=0)
-    cmds.setKeyframe("Character1_LeftForeArm.translateZ", value=0, time=0)
+        self.left_shoulder_z = dict()
+        self.left_elbow_z = dict()
+        self.left_wrist_z = dict()
+        self.left_thumb_cmc_z = dict()
+        self.left_thumb_mcp_z = dict()
+        self.left_thumb_ip_z = dict()
+        self.left_thumb_tip_z = dict()
+        self.left_index_finger_mcp_z = dict()
+        self.left_index_finger_pip_z = dict()
+        self.left_index_finger_dip_z = dict()
+        self.left_index_finger_tip_z = dict()
+        self.left_middle_finger_mcp_z = dict()
+        self.left_middle_finger_pip_z = dict()
+        self.left_middle_finger_dip_z = dict()
+        self.left_middle_finger_tip_z = dict()
+        self.left_ring_finger_mcp_z = dict()
+        self.left_ring_finger_pip_z = dict()
+        self.left_ring_finger_dip_z = dict()
+        self.left_ring_finger_tip_z = dict()
+        self.left_pinky_mcp_z = dict()
+        self.left_pinky_pip_z = dict()
+        self.left_pinky_dip_z = dict()
+        self.left_pinky_tip_z = dict()
+        self.right_shoulder_z = dict()
+        self.right_elbow_z = dict()
+        self.right_wrist_z = dict()
+        self.right_thumb_cmc_z = dict()
+        self.right_thumb_mcp_z = dict()
+        self.right_thumb_ip_z = dict()
+        self.right_thumb_tip_z = dict()
+        self.right_index_finger_mcp_z = dict()
+        self.right_index_finger_pip_z = dict()
+        self.right_index_finger_dip_z = dict()
+        self.right_index_finger_tip_z = dict()
+        self.right_middle_finger_mcp_z = dict()
+        self.right_middle_finger_pip_z = dict()
+        self.right_middle_finger_dip_z = dict()
+        self.right_middle_finger_tip_z = dict()
+        self.right_ring_finger_mcp_z = dict()
+        self.right_ring_finger_pip_z = dict()
+        self.right_ring_finger_dip_z = dict()
+        self.right_ring_finger_tip_z = dict()
+        self.right_pinky_mcp_z = dict()
+        self.right_pinky_pip_z = dict()
+        self.right_pinky_dip_z = dict()
+        self.right_pinky_tip_z = dict()
 
-    cmds.setKeyframe("Character1_LeftHand.translateX", value=26.697, time=0)
-    cmds.setKeyframe("Character1_LeftHand.translateY", value=-0, time=0)
-    cmds.setKeyframe("Character1_LeftHand.translateZ", value=0, time=0)
+    # 클래스 실행 함수
+    def excute(self):
+        print("\n##### json_to_python.py #####\n")
 
-    cmds.setKeyframe("Character1_LeftHandThumb1.translateX", value=4.349, time=0)
-    cmds.setKeyframe("Character1_LeftHandThumb1.translateY", value=-0.799, time=0)
-    cmds.setKeyframe("Character1_LeftHandThumb1.translateZ", value=4.282, time=0)
-    cmds.setKeyframe("Character1_LeftHandThumb2.translateX", value=2.513, time=0)
-    cmds.setKeyframe("Character1_LeftHandThumb2.translateY", value=-0.536, time=0)
-    cmds.setKeyframe("Character1_LeftHandThumb2.translateZ", value=0.707, time=0)
-    cmds.setKeyframe("Character1_LeftHandThumb3.translateX", value=2.543, time=0)
-    cmds.setKeyframe("Character1_LeftHandThumb3.translateY", value=0, time=0)
-    cmds.setKeyframe("Character1_LeftHandThumb3.translateZ", value=0, time=0)
-    cmds.setKeyframe("Character1_LeftHandThumb4.translateX", value=2.677, time=0)
-    cmds.setKeyframe("Character1_LeftHandThumb4.translateY", value=-0, time=0)
-    cmds.setKeyframe("Character1_LeftHandThumb4.translateZ", value=-0, time=0)
-    cmds.setKeyframe("Character1_LeftHandIndex1.translateX", value=8.822, time=0)
-    cmds.setKeyframe("Character1_LeftHandIndex1.translateY", value=0.2, time=0)
-    cmds.setKeyframe("Character1_LeftHandIndex1.translateZ", value=3.472, time=0)
+        # keypoint 폴더에서 json 파일 선택
+        json_list = os.listdir(self.data_path + "keypoint/")
+        print("")
+        for i, file in enumerate(json_list):
+            print(i, '. ', file)
+        try:
+            json_num = int(input("\nSelect json file: "))
+            self.json_name = json_list[json_num]
+        except:
+            print("\n! Error: Wrong select number")
 
-    #cmds.setKeyframe("Character1_LeftHandIndex1.rotate", 0, -2, -0)
-    cmds.setKeyframe("Character1_LeftHandIndex2.translateX", value=4.225, time=0)
-    cmds.setKeyframe("Character1_LeftHandIndex2.translateY", value=-0, time=0)
-    cmds.setKeyframe("Character1_LeftHandIndex2.translateZ", value=-0, time=0)
-    #cmds.setKeyframe("Character1_LeftHandIndex2.rotate", 0, -2, -0)
-    cmds.setKeyframe("Character1_LeftHandIndex3.translateX", value=2.647, time=0)
-    cmds.setKeyframe("Character1_LeftHandIndex3.translateY", value=-0, time=0)
-    cmds.setKeyframe("Character1_LeftHandIndex3.translateZ", value=0.185, time=0)
-    #cmds.setKeyframe("Character1_LeftHandIndex3.rotate", 0, -2, -0)
-    cmds.setKeyframe("Character1_LeftHandIndex4.translateX", value=1.957, time=0)
-    cmds.setKeyframe("Character1_LeftHandIndex4.translateY", value=-0, time=0)
-    cmds.setKeyframe("Character1_LeftHandIndex4.translateZ", value=0.068, time=0)
-    #cmds.setKeyframe("Character1_LeftHandIndex4.rotate", 0, -2, -0)
-    cmds.setKeyframe("Character1_LeftHandMiddle1.translateX", value=8.81, time=0)
-    cmds.setKeyframe("Character1_LeftHandMiddle1.translateY", value=0.501, time=0)
-    cmds.setKeyframe("Character1_LeftHandMiddle1.translateZ", value=1.305, time=0)
+        self.locToRot()  # json -> rotation
 
-    #cmds.setKeyframe("Character1_LeftHandMiddle1.rotate", 0, -0.004, -0)
-    cmds.setKeyframe("Character1_LeftHandMiddle2.translateX", value=4.863, time=0)
-    cmds.setKeyframe("Character1_LeftHandMiddle2.translateY", value=0, time=0)
-    cmds.setKeyframe("Character1_LeftHandMiddle2.translateZ", value=0, time=0)
-    #cmds.setKeyframe("Character1_LeftHandMiddle2.rotate", 0, -0.004, -0)
-    cmds.setKeyframe("Character1_LeftHandMiddle3.translateX", value=2.7650, time=0)
-    cmds.setKeyframe("Character1_LeftHandMiddle3.translateY", value=0, time=0)
-    cmds.setKeyframe("Character1_LeftHandMiddle3.translateZ", value=0, time=0)
-    #cmds.setKeyframe("Character1_LeftHandMiddle3.rotate", 0, -0.004, -0)
-    cmds.setKeyframe("Character1_LeftHandMiddle4.translateX", value=2.006, time=0)
-    cmds.setKeyframe("Character1_LeftHandMiddle4.translateY", value=0, time=0)
-    cmds.setKeyframe("Character1_LeftHandMiddle4.translateZ", value=0, time=0)
+    # json 파일을 읽고, Rotation 값을 구한 뒤, 리스트에 저장
+    def locToRot(self):
+        # json 파일을 읽고
+        with open(self.data_path + "keypoint/" + self.json_name, 'r') as f:
+            self.json_data = json.load(f)
 
-    #cmds.setKeyframe("Character1_LeftHandMiddle4.rotate", 0, -0.004, -0)
-    cmds.setKeyframe("Character1_LeftHandRing1.translateX", value=8.894, time=0)
-    cmds.setKeyframe("Character1_LeftHandRing1.translateY", value=0.38, time=0)
-    cmds.setKeyframe("Character1_LeftHandRing1.translateZ", value=-0.793, time=0)
-    #cmds.setKeyframe("Character1_LeftHandRing1.rotate", 0, -0.004, -0)
-    cmds.setKeyframe("Character1_LeftHandRing2.translateX", value=4.538, time=0)
-    cmds.setKeyframe("Character1_LeftHandRing2.translateY", value=0, time=0)
-    cmds.setKeyframe("Character1_LeftHandRing2.translateZ", value=-0, time=0)
-    #cmds.setKeyframe("Character1_LeftHandRing2.rotate", 0, -0.004, -0)
-    cmds.setKeyframe("Character1_LeftHandRing3.translateX", value=2.305, time=0)
-    cmds.setKeyframe("Character1_LeftHandRing3.translateY", value=0, time=0)
-    cmds.setKeyframe("Character1_LeftHandRing3.translateZ", value=0, time=0)
+        # json 파일을 읽고 프레임별로 Rotaion 값 구한 뒤, 리스트에 저장
+        self.frames = self.json_data['frames']
+        for i in range(self.frames+1):
+            # Left-x
+            self.left_shoulder_x[i] = self.json_data['left_shoulder']['x'][str(i)]
+            self.left_elbow_x[i] = self.json_data['left_elbow']['x'][str(i)] - \
+                                   self.json_data['left_shoulder']['x'][str(i)]
+            self.left_wrist_x[i] = self.json_data['left_wrist']['x'][str(i)] - \
+                                   self.json_data['left_elbow']['x'][str(i)]
 
-    #cmds.setKeyframe("Character1_LeftHandRing3.rotate", 0, -0.004, -0)
-    cmds.setKeyframe("Character1_LeftHandRing4.translateX", value=1.923, time=0)
-    cmds.setKeyframe("Character1_LeftHandRing4.translateY", value=0, time=0)
-    cmds.setKeyframe("Character1_LeftHandRing4.translateZ", value=-0, time=0)
-    #cmds.setKeyframe("Character1_LeftHandRing4.rotate", 0, -0.004, -0)
-    cmds.setKeyframe("Character1_LeftHandPinky1.translateX", value=8.882, time=0)
-    cmds.setKeyframe("Character1_LeftHandPinky1.translateY", value=-0.313, time=0)
-    cmds.setKeyframe("Character1_LeftHandPinky1.translateZ", value=-2.49, time=0)
-    #cmds.setKeyframe("Character1_LeftHandPinky1.rotate", 0, 0, 0.001)
-    cmds.setKeyframe("Character1_LeftHandPinky2.translateX", value=3.044, time=0)
-    cmds.setKeyframe("Character1_LeftHandPinky2.translateY", value=0, time=0)
-    cmds.setKeyframe("Character1_LeftHandPinky2.translateZ", value=0, time=0)
-    #cmds.setKeyframe("Character1_LeftHandPinky2.rotate", 0, 0, 0.001)
-    cmds.setKeyframe("Character1_LeftHandPinky3.translateX", value=1.975, time=0)
-    cmds.setKeyframe("Character1_LeftHandPinky3.translateY", value=0, time=0)
-    cmds.setKeyframe("Character1_LeftHandPinky3.translateZ", value=-0, time=0)
-    #cmds.setKeyframe("Character1_LeftHandPinky3.rotate", 0, 0, 0.001)
-    cmds.setKeyframe("Character1_LeftHandPinky4.translateX", value=1.667, time=0)
-    cmds.setKeyframe("Character1_LeftHandPinky4.translateY", value=0, time=0)
-    cmds.setKeyframe("Character1_LeftHandPinky4.translateZ", value=0, time=0)
-    #cmds.setKeyframe("Character1_LeftHandPinky4.rotate", 0, 0, 0.001)
+            self.left_thumb_cmc_x[i] = self.json_data['left_thumb_cmc']['x'][str(i)] - \
+                                       self.json_data['left_wrist']['x'][str(i)]
+            self.left_thumb_mcp_x[i] = self.json_data['left_thumb_mcp']['x'][str(i)] - \
+                                       self.json_data['left_thumb_cmc']['x'][str(i)]
+            self.left_thumb_ip_x[i] = self.json_data['left_thumb_ip']['x'][str(i)] - \
+                                       self.json_data['left_thumb_mcp']['x'][str(i)]
+            self.left_thumb_tip_x[i] = self.json_data['left_thumb_tip']['x'][str(i)] - \
+                                       self.json_data['left_thumb_ip']['x'][str(i)]
 
-    '''
-    cmds.setKeyframe("Character1_RightArm.translate", -10.707, 0, -0)
-    cmds.setKeyframe("Character1_RightArm.rotate", -10, 6, 75)
-    cmds.setKeyframe("Character1_RightForeArm.translate", -27.305, -0.001, -0)
-    cmds.setKeyframe("Character1_RightHand.translate", -26.697, 0, -0)
-    cmds.setKeyframe("Character1_RightHandThumb1.translate", -4.349, 0.799, -4.282)
-    cmds.setKeyframe("Character1_RightHandThumb2.translate", -2.513, 0.536, -0.707)
-    cmds.setKeyframe("Character1_RightHandThumb3.translate", -2.543, -0, -0)
-    cmds.setKeyframe("Character1_RightHandThumb4.translate", -2.677, 0, 0)
-    cmds.setKeyframe("Character1_RightHandIndex1.translate", -8.822, -0.2, -3.472)
-    cmds.setKeyframe("Character1_RightHandIndex1.rotate", -0, 2, 0)
-    cmds.setKeyframe("Character1_RightHandIndex2.translate", -4.225, 0, 0)
-    cmds.setKeyframe("Character1_RightHandIndex2.rotate", -0, 2, 0)
-    cmds.setKeyframe("Character1_RightHandIndex3.translate", -2.647, 0, -0.185)
-    cmds.setKeyframe("Character1_RightHandIndex3.rotate", -0, 2, 0)
-    cmds.setKeyframe("Character1_RightHandIndex4.translate", -1.957, 0, -0.068)
-    cmds.setKeyframe("Character1_RightHandIndex4.rotate", -0, 2, 0)
-    cmds.setKeyframe("Character1_RightHandMiddle1.translate", -8.81, -0.501, -1.305)
-    cmds.setKeyframe("Character1_RightHandMiddle1.rotate", -0, 0.004, 0)
-    cmds.setKeyframe("Character1_RightHandMiddle2.translate", -4.863, -0, -0)
-    cmds.setKeyframe("Character1_RightHandMiddle2.rotate", -0, 0.004, 0)
-    cmds.setKeyframe("Character1_RightHandMiddle3.translate", -2.765, -0, -0)
-    cmds.setKeyframe("Character1_RightHandMiddle3.rotate", -0, 0.004, 0)
-    cmds.setKeyframe("Character1_RightHandMiddle4.translate", -2.006, -0, -0)
-    cmds.setKeyframe("Character1_RightHandMiddle4.rotate", -0, 0.004, 0)
-    cmds.setKeyframe("Character1_RightHandRing1.translate", -8.894, -0.38, 0.793)
-    cmds.setKeyframe("Character1_RightHandRing1.rotate", -0, 0.004, 0)
-    cmds.setKeyframe("Character1_RightHandRing2.translate", -4.538, -0, 0)
-    cmds.setKeyframe("Character1_RightHandRing2.rotate", -0, 0.004, 0)
-    cmds.setKeyframe("Character1_RightHandRing3.translate", -2.305, -0, -0)
-    cmds.setKeyframe("Character1_RightHandRing3.rotate", -0, 0.004, 0)
-    cmds.setKeyframe("Character1_RightHandRing4.translate", -1.923, -0, 0)
-    cmds.setKeyframe("Character1_RightHandRing4.rotate", -0, 0.004, 0)
-    cmds.setKeyframe("Character1_RightHandPinky1.translate", -8.882, 0.313, 2.49)
-    cmds.setKeyframe("Character1_RightHandPinky1.rotate", -0, -0, -0.001)
-    cmds.setKeyframe("Character1_RightHandPinky2.translate", -3.044, -0, -0)
-    cmds.setKeyframe("Character1_RightHandPinky2.rotate", -0, -0, -0.001)
-    cmds.setKeyframe("Character1_RightHandPinky3.translate", -1.975, -0, 0)
-    cmds.setKeyframe("Character1_RightHandPinky3.rotate", -0, -0, -0.001)
-    cmds.setKeyframe("Character1_RightHandPinky4.translate", -1.667, -0, -0)
-    cmds.setKeyframe("Character1_RightHandPinky4.rotate", -0, -0, -0.001)
-    '''
+            self.left_index_finger_mcp_x[i] = self.json_data['left_index_finger_mcp']['x'][str(i)] - \
+                                       self.json_data['left_wrist']['x'][str(i)]
+            self.left_index_finger_pip_x[i] = self.json_data['left_index_finger_pip']['x'][str(i)] - \
+                                       self.json_data['left_index_finger_mcp']['x'][str(i)]
+            self.left_index_finger_dip_x[i] = self.json_data['left_index_finger_dip']['x'][str(i)] - \
+                                      self.json_data['left_index_finger_pip']['x'][str(i)]
+            self.left_index_finger_tip_x[i] = self.json_data['left_index_finger_tip']['x'][str(i)] - \
+                                       self.json_data['left_index_finger_dip']['x'][str(i)]
 
-def readJson(json_name):
-    json_path = 'D:/Workspace/GitHub/capstone-2021-2021-30/capston_db/motion_data_file/' + json_name
-    #json_path = '../motion_data_file/' + json_name
-    
-    with open(json_path, 'r') as f:
-        json_data = json.load(f)
-       
-    return json_data
-   
-#initPosition()
-setKeyframes()
+            self.left_middle_finger_mcp_x[i] = self.json_data['left_middle_finger_mcp']['x'][str(i)] - \
+                                       self.json_data['left_wrist']['x'][str(i)]
+            self.left_middle_finger_pip_x[i] = self.json_data['left_middle_finger_pip']['x'][str(i)] - \
+                                       self.json_data['left_middle_finger_mcp']['x'][str(i)]
+            self.left_middle_finger_dip_x[i] = self.json_data['left_middle_finger_dip']['x'][str(i)] - \
+                                      self.json_data['left_middle_finger_pip']['x'][str(i)]
+            self.left_middle_finger_tip_x[i] = self.json_data['left_middle_finger_tip']['x'][str(i)] - \
+                                       self.json_data['left_middle_finger_dip']['x'][str(i)]
+
+            self.left_ring_finger_mcp_x[i] = self.json_data['left_ring_finger_mcp']['x'][str(i)] - \
+                                       self.json_data['left_wrist']['x'][str(i)]
+            self.left_ring_finger_pip_x[i] = self.json_data['left_ring_finger_pip']['x'][str(i)] - \
+                                       self.json_data['left_ring_finger_mcp']['x'][str(i)]
+            self.left_ring_finger_dip_x[i] = self.json_data['left_ring_finger_dip']['x'][str(i)] - \
+                                      self.json_data['left_ring_finger_pip']['x'][str(i)]
+            self.left_ring_finger_tip_x[i] = self.json_data['left_ring_finger_tip']['x'][str(i)] - \
+                                       self.json_data['left_ring_finger_dip']['x'][str(i)]
+
+            self.left_pinky_mcp_x[i] = self.json_data['left_pinky_mcp']['x'][str(i)] - \
+                                       self.json_data['left_wrist']['x'][str(i)]
+            self.left_pinky_pip_x[i] = self.json_data['left_pinky_pip']['x'][str(i)] - \
+                                       self.json_data['left_pinky_mcp']['x'][str(i)]
+            self.left_pinky_dip_x[i] = self.json_data['left_pinky_dip']['x'][str(i)] - \
+                                      self.json_data['left_pinky_pip']['x'][str(i)]
+            self.left_pinky_tip_x[i] = self.json_data['left_pinky_tip']['x'][str(i)] - \
+                                       self.json_data['left_pinky_dip']['x'][str(i)]
+
+            # Right-x
+            self.right_shoulder_x[i] = self.json_data['right_shoulder']['x'][str(i)]
+            self.right_elbow_x[i] = self.json_data['right_elbow']['x'][str(i)] - \
+                                   self.json_data['right_shoulder']['x'][str(i)]
+            self.right_wrist_x[i] = self.json_data['right_wrist']['x'][str(i)] - \
+                                   self.json_data['right_elbow']['x'][str(i)]
+
+            self.right_thumb_cmc_x[i] = self.json_data['right_thumb_cmc']['x'][str(i)] - \
+                                       self.json_data['right_wrist']['x'][str(i)]
+            self.right_thumb_mcp_x[i] = self.json_data['right_thumb_mcp']['x'][str(i)] - \
+                                       self.json_data['right_thumb_cmc']['x'][str(i)]
+            self.right_thumb_ip_x[i] = self.json_data['right_thumb_ip']['x'][str(i)] - \
+                                      self.json_data['right_thumb_mcp']['x'][str(i)]
+            self.right_thumb_tip_x[i] = self.json_data['right_thumb_tip']['x'][str(i)] - \
+                                       self.json_data['right_thumb_ip']['x'][str(i)]
+
+            self.right_index_finger_mcp_x[i] = self.json_data['right_index_finger_mcp']['x'][str(i)] - \
+                                              self.json_data['right_wrist']['x'][str(i)]
+            self.right_index_finger_pip_x[i] = self.json_data['right_index_finger_pip']['x'][str(i)] - \
+                                              self.json_data['right_index_finger_mcp']['x'][str(i)]
+            self.right_index_finger_dip_x[i] = self.json_data['right_index_finger_dip']['x'][str(i)] - \
+                                              self.json_data['right_index_finger_pip']['x'][str(i)]
+            self.right_index_finger_tip_x[i] = self.json_data['right_index_finger_tip']['x'][str(i)] - \
+                                              self.json_data['right_index_finger_dip']['x'][str(i)]
+
+            self.right_middle_finger_mcp_x[i] = self.json_data['right_middle_finger_mcp']['x'][str(i)] - \
+                                               self.json_data['right_wrist']['x'][str(i)]
+            self.right_middle_finger_pip_x[i] = self.json_data['right_middle_finger_pip']['x'][str(i)] - \
+                                               self.json_data['right_middle_finger_mcp']['x'][str(i)]
+            self.right_middle_finger_dip_x[i] = self.json_data['right_middle_finger_dip']['x'][str(i)] - \
+                                               self.json_data['right_middle_finger_pip']['x'][str(i)]
+            self.right_middle_finger_tip_x[i] = self.json_data['right_middle_finger_tip']['x'][str(i)] - \
+                                               self.json_data['right_middle_finger_dip']['x'][str(i)]
+
+            self.right_ring_finger_mcp_x[i] = self.json_data['right_ring_finger_mcp']['x'][str(i)] - \
+                                             self.json_data['right_wrist']['x'][str(i)]
+            self.right_ring_finger_pip_x[i] = self.json_data['right_ring_finger_pip']['x'][str(i)] - \
+                                             self.json_data['right_ring_finger_mcp']['x'][str(i)]
+            self.right_ring_finger_dip_x[i] = self.json_data['right_ring_finger_dip']['x'][str(i)] - \
+                                             self.json_data['right_ring_finger_pip']['x'][str(i)]
+            self.right_ring_finger_tip_x[i] = self.json_data['right_ring_finger_tip']['x'][str(i)] - \
+                                             self.json_data['right_ring_finger_dip']['x'][str(i)]
+
+            self.right_pinky_mcp_x[i] = self.json_data['right_pinky_mcp']['x'][str(i)] - \
+                                       self.json_data['right_wrist']['x'][str(i)]
+            self.right_pinky_pip_x[i] = self.json_data['right_pinky_pip']['x'][str(i)] - \
+                                       self.json_data['right_pinky_mcp']['x'][str(i)]
+            self.right_pinky_dip_x[i] = self.json_data['right_pinky_dip']['x'][str(i)] - \
+                                       self.json_data['right_pinky_pip']['x'][str(i)]
+            self.right_pinky_tip_x[i] = self.json_data['right_pinky_tip']['x'][str(i)] - \
+                                       self.json_data['right_pinky_dip']['x'][str(i)]
+
+            # Left-y
+            self.left_shoulder_y[i] = self.json_data['left_shoulder']['y'][str(i)]
+            self.left_elbow_y[i] = self.json_data['left_elbow']['y'][str(i)] - \
+                                   self.json_data['left_shoulder']['y'][str(i)]
+            self.left_wrist_y[i] = self.json_data['left_wrist']['y'][str(i)] - \
+                                   self.json_data['left_elbow']['y'][str(i)]
+
+            self.left_thumb_cmc_y[i] = self.json_data['left_thumb_cmc']['y'][str(i)] - \
+                                       self.json_data['left_wrist']['y'][str(i)]
+            self.left_thumb_mcp_y[i] = self.json_data['left_thumb_mcp']['y'][str(i)] - \
+                                       self.json_data['left_thumb_cmc']['y'][str(i)]
+            self.left_thumb_ip_y[i] = self.json_data['left_thumb_ip']['y'][str(i)] - \
+                                      self.json_data['left_thumb_mcp']['y'][str(i)]
+            self.left_thumb_tip_y[i] = self.json_data['left_thumb_tip']['y'][str(i)] - \
+                                       self.json_data['left_thumb_ip']['y'][str(i)]
+
+            self.left_index_finger_mcp_y[i] = self.json_data['left_index_finger_mcp']['y'][str(i)] - \
+                                              self.json_data['left_wrist']['y'][str(i)]
+            self.left_index_finger_pip_y[i] = self.json_data['left_index_finger_pip']['y'][str(i)] - \
+                                              self.json_data['left_index_finger_mcp']['y'][str(i)]
+            self.left_index_finger_dip_y[i] = self.json_data['left_index_finger_dip']['y'][str(i)] - \
+                                              self.json_data['left_index_finger_pip']['y'][str(i)]
+            self.left_index_finger_tip_y[i] = self.json_data['left_index_finger_tip']['y'][str(i)] - \
+                                              self.json_data['left_index_finger_dip']['y'][str(i)]
+
+            self.left_middle_finger_mcp_y[i] = self.json_data['left_middle_finger_mcp']['y'][str(i)] - \
+                                               self.json_data['left_wrist']['y'][str(i)]
+            self.left_middle_finger_pip_y[i] = self.json_data['left_middle_finger_pip']['y'][str(i)] - \
+                                               self.json_data['left_middle_finger_mcp']['y'][str(i)]
+            self.left_middle_finger_dip_y[i] = self.json_data['left_middle_finger_dip']['y'][str(i)] - \
+                                               self.json_data['left_middle_finger_pip']['y'][str(i)]
+            self.left_middle_finger_tip_y[i] = self.json_data['left_middle_finger_tip']['y'][str(i)] - \
+                                               self.json_data['left_middle_finger_dip']['y'][str(i)]
+
+            self.left_ring_finger_mcp_y[i] = self.json_data['left_ring_finger_mcp']['y'][str(i)] - \
+                                             self.json_data['left_wrist']['y'][str(i)]
+            self.left_ring_finger_pip_y[i] = self.json_data['left_ring_finger_pip']['y'][str(i)] - \
+                                             self.json_data['left_ring_finger_mcp']['y'][str(i)]
+            self.left_ring_finger_dip_y[i] = self.json_data['left_ring_finger_dip']['y'][str(i)] - \
+                                             self.json_data['left_ring_finger_pip']['y'][str(i)]
+            self.left_ring_finger_tip_y[i] = self.json_data['left_ring_finger_tip']['y'][str(i)] - \
+                                             self.json_data['left_ring_finger_dip']['y'][str(i)]
+
+            self.left_pinky_mcp_y[i] = self.json_data['left_pinky_mcp']['y'][str(i)] - \
+                                       self.json_data['left_wrist']['y'][str(i)]
+            self.left_pinky_pip_y[i] = self.json_data['left_pinky_pip']['y'][str(i)] - \
+                                       self.json_data['left_pinky_mcp']['y'][str(i)]
+            self.left_pinky_dip_y[i] = self.json_data['left_pinky_dip']['y'][str(i)] - \
+                                       self.json_data['left_pinky_pip']['y'][str(i)]
+            self.left_pinky_tip_y[i] = self.json_data['left_pinky_tip']['y'][str(i)] - \
+                                       self.json_data['left_pinky_dip']['y'][str(i)]
+
+            # Right-y
+            self.right_shoulder_y[i] = self.json_data['right_shoulder']['y'][str(i)]
+            self.right_elbow_y[i] = self.json_data['right_elbow']['y'][str(i)] - \
+                                   self.json_data['right_shoulder']['y'][str(i)]
+            self.right_wrist_y[i] = self.json_data['right_wrist']['y'][str(i)] - \
+                                   self.json_data['right_elbow']['y'][str(i)]
+
+            self.right_thumb_cmc_y[i] = self.json_data['right_thumb_cmc']['y'][str(i)] - \
+                                       self.json_data['right_wrist']['y'][str(i)]
+            self.right_thumb_mcp_y[i] = self.json_data['right_thumb_mcp']['y'][str(i)] - \
+                                       self.json_data['right_thumb_cmc']['y'][str(i)]
+            self.right_thumb_ip_y[i] = self.json_data['right_thumb_ip']['y'][str(i)] - \
+                                      self.json_data['right_thumb_mcp']['y'][str(i)]
+            self.right_thumb_tip_y[i] = self.json_data['right_thumb_tip']['y'][str(i)] - \
+                                       self.json_data['right_thumb_ip']['y'][str(i)]
+
+            self.right_index_finger_mcp_y[i] = self.json_data['right_index_finger_mcp']['y'][str(i)] - \
+                                              self.json_data['right_wrist']['y'][str(i)]
+            self.right_index_finger_pip_y[i] = self.json_data['right_index_finger_pip']['y'][str(i)] - \
+                                              self.json_data['right_index_finger_mcp']['y'][str(i)]
+            self.right_index_finger_dip_y[i] = self.json_data['right_index_finger_dip']['y'][str(i)] - \
+                                              self.json_data['right_index_finger_pip']['y'][str(i)]
+            self.right_index_finger_tip_y[i] = self.json_data['right_index_finger_tip']['y'][str(i)] - \
+                                              self.json_data['right_index_finger_dip']['y'][str(i)]
+
+            self.right_middle_finger_mcp_y[i] = self.json_data['right_middle_finger_mcp']['y'][str(i)] - \
+                                               self.json_data['right_wrist']['y'][str(i)]
+            self.right_middle_finger_pip_y[i] = self.json_data['right_middle_finger_pip']['y'][str(i)] - \
+                                               self.json_data['right_middle_finger_mcp']['y'][str(i)]
+            self.right_middle_finger_dip_y[i] = self.json_data['right_middle_finger_dip']['y'][str(i)] - \
+                                               self.json_data['right_middle_finger_pip']['y'][str(i)]
+            self.right_middle_finger_tip_y[i] = self.json_data['right_middle_finger_tip']['y'][str(i)] - \
+                                               self.json_data['right_middle_finger_dip']['y'][str(i)]
+
+            self.right_ring_finger_mcp_y[i] = self.json_data['right_ring_finger_mcp']['y'][str(i)] - \
+                                             self.json_data['right_wrist']['y'][str(i)]
+            self.right_ring_finger_pip_y[i] = self.json_data['right_ring_finger_pip']['y'][str(i)] - \
+                                             self.json_data['right_ring_finger_mcp']['y'][str(i)]
+            self.right_ring_finger_dip_y[i] = self.json_data['right_ring_finger_dip']['y'][str(i)] - \
+                                             self.json_data['right_ring_finger_pip']['y'][str(i)]
+            self.right_ring_finger_tip_y[i] = self.json_data['right_ring_finger_tip']['y'][str(i)] - \
+                                             self.json_data['right_ring_finger_dip']['y'][str(i)]
+
+            self.right_pinky_mcp_y[i] = self.json_data['right_pinky_mcp']['y'][str(i)] - \
+                                       self.json_data['right_wrist']['y'][str(i)]
+            self.right_pinky_pip_y[i] = self.json_data['right_pinky_pip']['y'][str(i)] - \
+                                       self.json_data['right_pinky_mcp']['y'][str(i)]
+            self.right_pinky_dip_y[i] = self.json_data['right_pinky_dip']['y'][str(i)] - \
+                                       self.json_data['right_pinky_pip']['y'][str(i)]
+            self.right_pinky_tip_y[i] = self.json_data['right_pinky_tip']['y'][str(i)] - \
+                                       self.json_data['right_pinky_dip']['y'][str(i)]
+
+            # Left-z
+            self.left_shoulder_z[i] = self.json_data['left_shoulder']['z'][str(i)]
+            self.left_elbow_z[i] = self.json_data['left_elbow']['z'][str(i)] - \
+                                   self.json_data['left_shoulder']['z'][str(i)]
+            self.left_wrist_z[i] = self.json_data['left_wrist']['z'][str(i)] - \
+                                   self.json_data['left_elbow']['z'][str(i)]
+
+            self.left_thumb_cmc_z[i] = self.json_data['left_thumb_cmc']['z'][str(i)] - \
+                                       self.json_data['left_wrist']['z'][str(i)]
+            self.left_thumb_mcp_z[i] = self.json_data['left_thumb_mcp']['z'][str(i)] - \
+                                       self.json_data['left_thumb_cmc']['z'][str(i)]
+            self.left_thumb_ip_z[i] = self.json_data['left_thumb_ip']['z'][str(i)] - \
+                                      self.json_data['left_thumb_mcp']['z'][str(i)]
+            self.left_thumb_tip_z[i] = self.json_data['left_thumb_tip']['z'][str(i)] - \
+                                       self.json_data['left_thumb_ip']['z'][str(i)]
+
+            self.left_index_finger_mcp_z[i] = self.json_data['left_index_finger_mcp']['z'][str(i)] - \
+                                              self.json_data['left_wrist']['z'][str(i)]
+            self.left_index_finger_pip_z[i] = self.json_data['left_index_finger_pip']['z'][str(i)] - \
+                                              self.json_data['left_index_finger_mcp']['z'][str(i)]
+            self.left_index_finger_dip_z[i] = self.json_data['left_index_finger_dip']['z'][str(i)] - \
+                                              self.json_data['left_index_finger_pip']['z'][str(i)]
+            self.left_index_finger_tip_z[i] = self.json_data['left_index_finger_tip']['z'][str(i)] - \
+                                              self.json_data['left_index_finger_dip']['z'][str(i)]
+
+            self.left_middle_finger_mcp_z[i] = self.json_data['left_middle_finger_mcp']['z'][str(i)] - \
+                                               self.json_data['left_wrist']['z'][str(i)]
+            self.left_middle_finger_pip_z[i] = self.json_data['left_middle_finger_pip']['z'][str(i)] - \
+                                               self.json_data['left_middle_finger_mcp']['z'][str(i)]
+            self.left_middle_finger_dip_z[i] = self.json_data['left_middle_finger_dip']['z'][str(i)] - \
+                                               self.json_data['left_middle_finger_pip']['z'][str(i)]
+            self.left_middle_finger_tip_z[i] = self.json_data['left_middle_finger_tip']['z'][str(i)] - \
+                                               self.json_data['left_middle_finger_dip']['z'][str(i)]
+
+            self.left_ring_finger_mcp_z[i] = self.json_data['left_ring_finger_mcp']['z'][str(i)] - \
+                                             self.json_data['left_wrist']['z'][str(i)]
+            self.left_ring_finger_pip_z[i] = self.json_data['left_ring_finger_pip']['z'][str(i)] - \
+                                             self.json_data['left_ring_finger_mcp']['z'][str(i)]
+            self.left_ring_finger_dip_z[i] = self.json_data['left_ring_finger_dip']['z'][str(i)] - \
+                                             self.json_data['left_ring_finger_pip']['z'][str(i)]
+            self.left_ring_finger_tip_z[i] = self.json_data['left_ring_finger_tip']['z'][str(i)] - \
+                                             self.json_data['left_ring_finger_dip']['z'][str(i)]
+
+            self.left_pinky_mcp_z[i] = self.json_data['left_pinky_mcp']['z'][str(i)] - \
+                                       self.json_data['left_wrist']['z'][str(i)]
+            self.left_pinky_pip_z[i] = self.json_data['left_pinky_pip']['z'][str(i)] - \
+                                       self.json_data['left_pinky_mcp']['z'][str(i)]
+            self.left_pinky_dip_z[i] = self.json_data['left_pinky_dip']['z'][str(i)] - \
+                                       self.json_data['left_pinky_pip']['z'][str(i)]
+            self.left_pinky_tip_z[i] = self.json_data['left_pinky_tip']['z'][str(i)] - \
+                                       self.json_data['left_pinky_dip']['z'][str(i)]
+
+            # Right-z
+            self.right_shoulder_z[i] = self.json_data['right_shoulder']['z'][str(i)]
+            self.right_elbow_z[i] = self.json_data['right_elbow']['z'][str(i)] - \
+                                   self.json_data['right_shoulder']['z'][str(i)]
+            self.right_wrist_z[i] = self.json_data['right_wrist']['z'][str(i)] - \
+                                   self.json_data['right_elbow']['z'][str(i)]
+
+            self.right_thumb_cmc_z[i] = self.json_data['right_thumb_cmc']['z'][str(i)] - \
+                                       self.json_data['right_wrist']['z'][str(i)]
+            self.right_thumb_mcp_z[i] = self.json_data['right_thumb_mcp']['z'][str(i)] - \
+                                       self.json_data['right_thumb_cmc']['z'][str(i)]
+            self.right_thumb_ip_z[i] = self.json_data['right_thumb_ip']['z'][str(i)] - \
+                                      self.json_data['right_thumb_mcp']['z'][str(i)]
+            self.right_thumb_tip_z[i] = self.json_data['right_thumb_tip']['z'][str(i)] - \
+                                       self.json_data['right_thumb_ip']['z'][str(i)]
+
+            self.right_index_finger_mcp_z[i] = self.json_data['right_index_finger_mcp']['z'][str(i)] - \
+                                              self.json_data['right_wrist']['z'][str(i)]
+            self.right_index_finger_pip_z[i] = self.json_data['right_index_finger_pip']['z'][str(i)] - \
+                                              self.json_data['right_index_finger_mcp']['z'][str(i)]
+            self.right_index_finger_dip_z[i] = self.json_data['right_index_finger_dip']['z'][str(i)] - \
+                                              self.json_data['right_index_finger_pip']['z'][str(i)]
+            self.right_index_finger_tip_z[i] = self.json_data['right_index_finger_tip']['z'][str(i)] - \
+                                              self.json_data['right_index_finger_dip']['z'][str(i)]
+
+            self.right_middle_finger_mcp_z[i] = self.json_data['right_middle_finger_mcp']['z'][str(i)] - \
+                                               self.json_data['right_wrist']['z'][str(i)]
+            self.right_middle_finger_pip_z[i] = self.json_data['right_middle_finger_pip']['z'][str(i)] - \
+                                               self.json_data['right_middle_finger_mcp']['z'][str(i)]
+            self.right_middle_finger_dip_z[i] = self.json_data['right_middle_finger_dip']['z'][str(i)] - \
+                                               self.json_data['right_middle_finger_pip']['z'][str(i)]
+            self.right_middle_finger_tip_z[i] = self.json_data['right_middle_finger_tip']['z'][str(i)] - \
+                                               self.json_data['right_middle_finger_dip']['z'][str(i)]
+
+            self.right_ring_finger_mcp_z[i] = self.json_data['right_ring_finger_mcp']['z'][str(i)] - \
+                                             self.json_data['right_wrist']['z'][str(i)]
+            self.right_ring_finger_pip_z[i] = self.json_data['right_ring_finger_pip']['z'][str(i)] - \
+                                             self.json_data['right_ring_finger_mcp']['z'][str(i)]
+            self.right_ring_finger_dip_z[i] = self.json_data['right_ring_finger_dip']['z'][str(i)] - \
+                                             self.json_data['right_ring_finger_pip']['z'][str(i)]
+            self.right_ring_finger_tip_z[i] = self.json_data['right_ring_finger_tip']['z'][str(i)] - \
+                                             self.json_data['right_ring_finger_dip']['z'][str(i)]
+
+            self.right_pinky_mcp_z[i] = self.json_data['right_pinky_mcp']['z'][str(i)] - \
+                                       self.json_data['right_wrist']['z'][str(i)]
+            self.right_pinky_pip_z[i] = self.json_data['right_pinky_pip']['z'][str(i)] - \
+                                       self.json_data['right_pinky_mcp']['z'][str(i)]
+            self.right_pinky_dip_z[i] = self.json_data['right_pinky_dip']['z'][str(i)] - \
+                                       self.json_data['right_pinky_pip']['z'][str(i)]
+            self.right_pinky_tip_z[i] = self.json_data['right_pinky_tip']['z'][str(i)] - \
+                                       self.json_data['right_pinky_dip']['z'][str(i)]
+
+    # Rotation 값이 저장된 배열을 가지고 키프레임 생성
+    def setKeyframes(self):
+        objs = cmds.ls(selection=True)  # ['Character1_Reference', 'Character1_Hips', ...] 이런식으로 불러옴
+
+        for obj in objs:
+            alpha = 75
+            falpha = 10
+            trans = []
+            rot = []
+            frames = self.json_data['frames']
+
+            if 'Character1' in obj:
+                for frame in range(self.frames+1):
+                    if 'Left' in obj:
+                        if obj == 'Character1_LeftArm':
+
+                            cmds.setKeyframe(obj + '.translateX', value=trans[0][0], time=frame * falpha)
+                            cmds.setKeyframe(obj + '.translateY', value=trans[0][1], time=frame * falpha)
+                            cmds.setKeyframe(obj + '.translateZ', value=trans[0][2], time=frame * falpha)
+                        elif obj == 'Character1_LeftForeArm':
+                            return
+                        elif obj == 'Character1_LeftHand':
+                            return
+                        elif obj == 'Character1_LeftHandThumb1':
+                            return
+                        elif obj == 'Character1_LeftHandThumb2':
+                            return
+                        elif obj == 'Character1_LeftHandThumb3':
+                            return
+                        elif obj == 'Character1_LeftHandThumb4':
+                            return
+                        elif obj == 'Character1_LeftHandIndex1':
+                            return
+                        elif obj == 'Character1_LeftHandIndex2':
+                            return
+                        elif obj == 'Character1_LeftHandIndex3':
+                            return
+                        elif obj == 'Character1_LeftHandIndex4':
+                            return
+                        elif obj == 'Character1_LeftHandMiddle1':
+                            return
+                        elif obj == 'Character1_LeftHandMiddle2':
+                            return
+                        elif obj == 'Character1_LeftHandMiddle3':
+                            return
+                        elif obj == 'Character1_LeftHandMiddle4':
+                            return
+                        elif obj == 'Character1_LeftHandRing1':
+                            return
+                        elif obj == 'Character1_LeftHandRing2':
+                            return
+                        elif obj == 'Character1_LeftHandRing3':
+                            return
+                        elif obj == 'Character1_LeftHandRing4':
+                            return
+                        elif obj == 'Character1_LeftHandPinky1':
+                            return
+                        elif obj == 'Character1_LeftHandPinky2':
+                            return
+                        elif obj == 'Character1_LeftHandPinky3':
+                            return
+                        elif obj == 'Character1_LeftHandPinky4':
+                            return
+
+                    elif 'Right' in obj:
+                        if obj == 'Character1_RightArm':
+                            return
+                        elif obj == 'Character1_RightForeArm':
+                            return
+                        elif obj == 'Character1_RightHand':
+                            return
+                        elif obj == 'Character1_RightHandThumb1':
+                            return
+                        elif obj == 'Character1_RightHandThumb2':
+                            return
+                        elif obj == 'Character1_RightHandThumb3':
+                            return
+                        elif obj == 'Character1_RightHandThumb4':
+                            return
+                        elif obj == 'Character1_RightHandIndex1':
+                            return
+                        elif obj == 'Character1_RightHandIndex2':
+                            return
+                        elif obj == 'Character1_RightHandIndex3':
+                            return
+                        elif obj == 'Character1_RightHandIndex4':
+                            return
+                        elif obj == 'Character1_RightHandMiddle1':
+                            return
+                        elif obj == 'Character1_RightHandMiddle2':
+                            return
+                        elif obj == 'Character1_RightHandMiddle3':
+                            return
+                        elif obj == 'Character1_RightHandMiddle4':
+                            return
+                        elif obj == 'Character1_RightHandRing1':
+                            return
+                        elif obj == 'Character1_RightHandRing2':
+                            return
+                        elif obj == 'Character1_RightHandRing3':
+                            return
+                        elif obj == 'Character1_RightHandRing4':
+                            return
+                        elif obj == 'Character1_RightHandPinky1':
+                            return
+                        elif obj == 'Character1_RightHandPinky2':
+                            return
+                        elif obj == 'Character1_RightHandPinky3':
+                            return
+                        elif obj == 'Character1_RightHandPinky4':
+                            return
+
+jtm = jsonToMaya()
+jtm.excute()
