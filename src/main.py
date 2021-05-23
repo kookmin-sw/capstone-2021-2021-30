@@ -1,6 +1,5 @@
 import sys
 import keypoint.main_keypoint as mk
-import motion.gui_motion as gm
 
 def main():
     print("\n##### main.py #####\n")
@@ -25,13 +24,6 @@ def main():
     else:
         print("\n! Exit (Number out of range)")
         sys.exit()
-
-    '''
-    elif select == 2:
-        print("\n\tStart 2. Motion...")
-        guim = gm.GuiMotion()
-        guim.show()
-    '''
 
 if __name__ == '__main__':
     main()
