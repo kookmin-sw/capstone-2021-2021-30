@@ -39,12 +39,11 @@ model = Sequential([
     Embedding(keypoint_size,embedding_dim , input_length = max_len),
     Bidirectional(LSTM(64,return_sequences = "True")),
     Bidirectional(LSTM(64)),
-    Dense(32, activation = "relu"),
-    Dense(1,activation = "sigmoid")
+    Dense(1)
 ])
 #model.summary()
 
-model.compile(optimizer="adam" , loss="binary_crossentropy" , metrics = ["accuracy"])
+model.compile(optimizer="adam" , loss="mean_squared_error" , metrics = ["accuracy"])
 checkpoint_callback = ModelCheckpoint("test.h5",
                                       save_best_only = True,
                                       monitor = "val_loss",
