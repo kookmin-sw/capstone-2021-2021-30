@@ -18,8 +18,7 @@ def make_keypoint_data():
     with open("keypoint(20frame).json") as f:
         datas = json.load(f)
 
-    # res = [[] for _ in range(1697)]
-    res = [[] for _ in range(423)]
+    res = [[] for _ in range(1697)]
     i = 0
     for lst in res:
         for motion in motions:
