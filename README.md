@@ -1,77 +1,69 @@
-[![Work in Repl.it](https://classroom.github.com/assets/work-in-replit-14baed9a392b3a25080506f3b7b6d57f295ec2978f6f33ec97e36a161684cbe9.svg)](https://classroom.github.com/online_ide?assignment_repo_id=370297&assignment_repo_type=GroupAssignmentRepo)
-# Welcome to GitHub
+# WhatSub?
 
-캡스톤 팀 생성을 축하합니다.
+~~~
+WhatSub? : What + Subtitles(자막)
+  기존에 존재하는 일반 자막이 아닌, 새로운 형태의 자막, 즉 수어 자막을 의미
+~~~
 
-## 팀소개 및 페이지를 꾸며주세요.
+## 팀페이지 주소
 
-- 프로젝트 소개
-  - 프로젝트 설치방법 및 데모, 사용방법, 프리뷰등을 readme.md에 작성.
-  - Api나 사용방법등 내용이 많을경우 wiki에 꾸미고 링크 추가.
+<https://kookmin-sw.github.io/capstone-2021-30/>
 
-- 팀페이지 꾸미기
-  - 프로젝트 소개 및 팀원 소개
-  - index.md 예시보고 수정.
+## 프로젝트 소개
 
-- GitHub Pages 리파지토리 Settings > Options > GitHub Pages 
-  - Source를 marster branch
-  - Theme Chooser에서 태마선택
-  - 수정후 팀페이지 확인하여 점검.
-
-**팀페이지 주소** -> https://kookmin-sw.github.io/ '{{자신의 리파지토리 아이디}}'
-
-**예시)** 2020년 0조  https://kookmin-sw.github.io/capstone-2020-0/
+<img src="./img/signlang.png" width="200" height="200">
 
 
-## 내용에 아래와 같은 내용들을 추가하세요.
+**"수많은 영상들이 쏟아지는 오늘날, 농인들의 영상 시청에 도움이 되고자 하는 프로젝트"**
 
-### 1. 프로잭트 소개
+### 개요
+- 한국수화는 '한국어'가 아닙니다. 한국어는 듣지 못하는 농인들에게 마치 외국어와 같습니다. \
+  그래서 농인은 영상에 있는 일반 자막보다 수어 통역사분의 수어 자막이 더 편합니다.
+- 본 프로젝트는 수어 번역이 필요한 영상들에 대해 여러가지 작업을 거쳐 수어 번역을 한 뒤, \
+  최종적으로 아바타 모델링을 통해 수어 자막을 보여주는 서비스를 제공하고자 합니다.
 
-프로젝트
+### 과정
+1. 음성 데이터 추출
+   - 음성 데이터를 Spectogram으로 표현
+   - Unet과 LSTM 모델을 통해 수어 키 포인트 값과 연결
+3. 수어 데이터 추출 및 연결
+   - 수어 단어의 키 포인트 좌표값 추출
+   - 키 포인트 좌표값 가공
+3. 그래픽 모델링
+   - 가공된 키 포인트 값을 그래픽으로 표현
 
-### 2. 소개 영상
+### 기능
+- 사용자가 업로드한 영상을 번역하여 수어 자막으로 변환
+- 편의성을 위해 영상 바로 옆에서 수어 자막을 재생
 
-프로젝트 소개하는 영상을 추가하세요
-
-### 3. 팀 소개
-
-팀을 소개하세요.
-
-팀원정보 및 담당이나 사진 및 SNS를 이용하여 소개하세요.
-
-### 4. 사용법
-
-소스코드제출시 설치법이나 사용법을 작성하세요.
-
-### 5. 기타
-
-추가적인 내용은 자유롭게 작성하세요.
-
-
-## Markdown을 사용하여 내용꾸미기
-
-Markdown은 작문을 스타일링하기위한 가볍고 사용하기 쉬운 구문입니다. 여기에는 다음을위한 규칙이 포함됩니다.
-
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-자세한 내용은 [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Support or Contact
-
-readme 파일 생성에 추가적인 도움이 필요하면 [도움말](https://help.github.com/articles/about-readmes/) 이나 [contact support](https://github.com/contact) 을 이용하세요.
+## 팀 소개
+~~~
+Name: 박상욱
+Student ID: 20153177
+E-Mail: apach6@naver.com
+Role: 팀장, 음성 데이터 관리
+~~~
+~~~
+Name: 김명호
+Student ID: 20151772
+E-Mail: kmaengggong@kookmin.ac.kr
+Role: 수어 데이터 관리
+~~~
+~~~
+Name: 박인혜
+Student ID: 20165151
+E-Mail: alsldjwm2@kookmin.ac.kr
+Role: 아바타 모델링
+~~~
+~~~
+Name: 조가성
+Student ID: 20171704
+E-Mail: 1138709428@qq.com
+Role: 아바타 모델링
+~~~
+~~~
+Name: 김유진
+Student ID: 20185283
+E-Mail: yujingim@kookmin.ac.kr
+Role: 음성 데이터 관리
+~~~
