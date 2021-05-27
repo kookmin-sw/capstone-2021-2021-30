@@ -1,3 +1,5 @@
+#change labels to one-hot vecotrs
+#-10 ~ 11 => 0 ~21
 def change_onehot(labels):
   one_hot = [[] for _ in range(21)]
 
